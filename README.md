@@ -1,4 +1,4 @@
-# ORION Analytics
+# ORION
 
 Protótipo funcional de uma plataforma web de inteligência financeira para recuperação de crédito e prevenção da inadimplência.
 
