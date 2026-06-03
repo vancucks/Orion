@@ -3,6 +3,7 @@ import {
   AlertTriangle,
   ClipboardList,
   CreditCard,
+  Database,
   FileText,
   Gauge,
   History,
@@ -23,7 +24,8 @@ const navItems = [
   { to: "/alertas", label: "Alertas", icon: AlertTriangle },
   { to: "/consulta-contrato", label: "Consulta de Contrato", icon: Search },
   { to: "/historico-financeiro", label: "Histórico Financeiro", icon: History },
-  { to: "/relatorio-gerencial", label: "Relatório Gerencial", icon: FileText }
+  { to: "/relatorio-gerencial", label: "Relatório Gerencial", icon: FileText },
+  { to: "/validacao-dados", label: "Validação de Dados", icon: Database }
 ];
 
 const titles: Record<string, string> = {
@@ -36,7 +38,8 @@ const titles: Record<string, string> = {
   "/alertas": "Alertas de Contratos Críticos",
   "/consulta-contrato": "Consulta de Contrato",
   "/historico-financeiro": "Histórico Financeiro",
-  "/relatorio-gerencial": "Relatório Gerencial"
+  "/relatorio-gerencial": "Relatório Gerencial",
+  "/validacao-dados": "Validação de Dados"
 };
 
 export function AppLayout() {

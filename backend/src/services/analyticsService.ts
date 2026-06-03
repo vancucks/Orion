@@ -56,7 +56,18 @@ export type PagamentoAnalitico = {
   indicadorContemplacao: string;
 };
 
-type AnalyticsPayload = ReturnType<typeof buildAnalytics>;
+type PreviewRecord = Record<string, unknown>;
+
+type ValidationData = {
+  totalRegistrosCsv: number;
+  totalRegistrosXlsx: number;
+  primeirosRegistrosCsv: PreviewRecord[];
+  primeirosRegistrosXlsx: PreviewRecord[];
+};
+
+type AnalyticsPayload = ReturnType<typeof buildAnalytics> & {
+  validacaoDados: ValidationData;
+};
 
 type CacheEntry = {
   key: string;
@@ -94,7 +105,15 @@ export async function getAnalytics() {
     .map((row) => cleanContrato(row, latestPaymentByContract.get(normalizeId(row.ID_Contrato))))
     .filter((contrato): contrato is ContratoAnalitico => Boolean(contrato));
 
-  const payload = buildAnalytics(contratos, pagamentos);
+  const payload = {
+    ...buildAnalytics(contratos, pagamentos),
+    validacaoDados: {
+      totalRegistrosCsv: rawCobrancas.length,
+      totalRegistrosXlsx: rawPagamentos.length,
+      primeirosRegistrosCsv: rawCobrancas.slice(0, 20).map(normalizePreviewRecord),
+      primeirosRegistrosXlsx: rawPagamentos.slice(0, 20).map(normalizePreviewRecord)
+    }
+  };
   cache = { key, payload };
 
   return payload;
@@ -599,6 +618,22 @@ function normalizeText(value: unknown, fallback: string) {
 
   const text = String(value).normalize("NFC").trim().replace(/\s+/g, " ");
   return text || fallback;
+}
+
+function normalizePreviewRecord<T extends Record<string, unknown>>(record: T) {
+  return Object.fromEntries(Object.entries(record).map(([key, value]) => [key, normalizePreviewValue(value)]));
+}
+
+function normalizePreviewValue(value: unknown) {
+  if (value instanceof Date) {
+    return toIsoDate(value);
+  }
+
+  if (value === null || value === undefined) {
+    return "";
+  }
+
+  return value;
 }
 
 function removeDiacritics(value: string) {

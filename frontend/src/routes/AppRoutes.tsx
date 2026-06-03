@@ -11,6 +11,7 @@ import { DashboardRisco } from "../pages/DashboardRisco";
 import { HistoricoFinanceiro } from "../pages/HistoricoFinanceiro";
 import { Login } from "../pages/Login";
 import { RelatorioGerencial } from "../pages/RelatorioGerencial";
+import { ValidacaoDados } from "../pages/ValidacaoDados";
 
 export function AppRoutes() {
   return (
@@ -27,6 +28,7 @@ export function AppRoutes() {
         <Route path="/consulta-contrato" element={<ConsultaContrato />} />
         <Route path="/historico-financeiro" element={<HistoricoFinanceiro />} />
         <Route path="/relatorio-gerencial" element={<RelatorioGerencial />} />
+        <Route path="/validacao-dados" element={<ValidacaoDados />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

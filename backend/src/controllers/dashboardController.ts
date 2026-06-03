@@ -110,6 +110,13 @@ export const getInsights = async (_req: Request, res: Response) => {
   await sendAnalytics(res, (analytics) => analytics.insights);
 };
 
+export const getValidacaoDados = async (_req: Request, res: Response) => {
+  await sendAnalytics(res, (analytics) => ({
+    ...analytics.validacaoDados,
+    kpis: analytics.kpis
+  }));
+};
+
 export const getRelatorios = async (_req: Request, res: Response) => {
   await sendAnalytics(res, (analytics) => analytics.relatorioGerencial);
 };

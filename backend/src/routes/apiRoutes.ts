@@ -11,7 +11,8 @@ import {
   getHistoricoContrato,
   getInsights,
   getKpis,
-  getRelatorios
+  getRelatorios,
+  getValidacaoDados
 } from "../controllers/dashboardController.js";
 
 const router = Router();
@@ -27,6 +28,7 @@ router.get("/alertas", getAlertas);
 router.get("/contratos/:id", getContrato);
 router.get("/contratos/:id/historico", getHistoricoContrato);
 router.get("/insights", getInsights);
+router.get("/validacao-dados", getValidacaoDados);
 router.get("/relatorios", getRelatorios);
 
 export default router;
