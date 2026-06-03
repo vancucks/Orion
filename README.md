@@ -104,7 +104,7 @@ npm run dev:frontend
 Endereços padrão:
 
 - Frontend: `http://localhost:5173`
-- Backend/API: `http://localhost:3333`
+- Backend/API: `http://localhost:3334`
 
 ## Build
 
