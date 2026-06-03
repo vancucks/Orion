@@ -87,14 +87,28 @@ export class DataFileNotFoundError extends Error {
 const dataDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../data");
 const cobrancaPath = path.join(dataDir, "cobranca_assessorias.csv");
 const pagamentosPath = path.join(dataDir, "fluxo_pagamentos.xlsx");
+const analysisOutputDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../analysis/output");
+const analysisOutputPaths = {
+  kpis: path.join(analysisOutputDir, "kpis.json"),
+  dashboards: path.join(analysisOutputDir, "dashboards.json"),
+  insights: path.join(analysisOutputDir, "insights.json"),
+  validacaoDados: path.join(analysisOutputDir, "validacao_dados.json")
+};
 
 let cache: CacheEntry | null = null;
 
 export async function getAnalytics() {
-  const key = await getDataFilesKey();
+  const key = await getAnalyticsKey();
 
   if (cache?.key === key) {
     return cache.payload;
+  }
+
+  const generatedAnalytics = await readGeneratedAnalytics();
+
+  if (generatedAnalytics) {
+    cache = { key, payload: generatedAnalytics };
+    return generatedAnalytics;
   }
 
   const rawCobrancas = await readCobrancas();
@@ -117,6 +131,57 @@ export async function getAnalytics() {
   cache = { key, payload };
 
   return payload;
+}
+
+async function getAnalyticsKey() {
+  const generatedKey = await getGeneratedAnalyticsKey();
+
+  if (generatedKey) {
+    return `pandas:${generatedKey}`;
+  }
+
+  return `source:${await getDataFilesKey()}`;
+}
+
+async function getGeneratedAnalyticsKey() {
+  const parts: string[] = [];
+
+  for (const filePath of Object.values(analysisOutputPaths)) {
+    try {
+      const fileStat = await stat(filePath);
+      parts.push(`${filePath}:${fileStat.mtimeMs}:${fileStat.size}`);
+    } catch {
+      return null;
+    }
+  }
+
+  return parts.join("|");
+}
+
+async function readGeneratedAnalytics(): Promise<AnalyticsPayload | null> {
+  const hasAllOutputs = await getGeneratedAnalyticsKey();
+
+  if (!hasAllOutputs) {
+    return null;
+  }
+
+  const [kpis, dashboards, insights, validacaoDados] = await Promise.all([
+    readJson<Record<string, unknown>>(analysisOutputPaths.kpis),
+    readJson<Record<string, unknown>>(analysisOutputPaths.dashboards),
+    readJson<Record<string, unknown>>(analysisOutputPaths.insights),
+    readJson<ValidationData>(analysisOutputPaths.validacaoDados)
+  ]);
+
+  return {
+    ...dashboards,
+    kpis,
+    insights,
+    validacaoDados
+  } as AnalyticsPayload;
+}
+
+async function readJson<T>(filePath: string) {
+  return JSON.parse(await readFile(filePath, "utf8")) as T;
 }
 
 async function getDataFilesKey() {
