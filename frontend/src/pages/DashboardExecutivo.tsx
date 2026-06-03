@@ -1,5 +1,5 @@
 import { Bar, BarChart, CartesianGrid, Cell, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import { AlertCircle, Clock, Percent, Wallet } from "lucide-react";
+import { Activity, AlertTriangle, Clock, Gauge, MinusCircle, Percent, ShieldAlert, TrendingDown, TrendingUp, Wallet } from "lucide-react";
 import { ChartCard } from "../components/ChartCard";
 import { EmptyState } from "../components/EmptyState";
 import { ErrorState } from "../components/ErrorState";
@@ -25,9 +25,9 @@ export function DashboardExecutivo() {
   const { data, loading, error } = useApi<ExecutivoData>(path);
 
   if (loading) return <LoadingState />;
-  if (error || !data) return <ErrorState message={error ?? "Dados indisponíveis."} />;
+  if (error || !data) return <ErrorState message={error ?? "Dados indisponiveis."} />;
 
-  if (data?.regioes.length === 0 && data.statusCobranca.length === 0) {
+  if (data.regioes.length === 0 && data.statusCobranca.length === 0) {
     return (
       <div className="space-y-6">
         <FilterBar filters={["regioes", "periodos", "statusCobranca", "niveisRisco", "formasPagamento", "assessorias"]} />
@@ -36,15 +36,40 @@ export function DashboardExecutivo() {
     );
   }
 
+  const tendencia = data.kpis.tendenciaTemporal;
+  const TrendIcon = tendencia?.direcao === "alta" ? TrendingUp : tendencia?.direcao === "queda" ? TrendingDown : MinusCircle;
+
   return (
     <div className="space-y-6">
       <FilterBar filters={["regioes", "periodos", "statusCobranca", "niveisRisco", "formasPagamento", "assessorias"]} />
 
       <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        <KpiCard title="Valor Total Inadimplente" value={currency.format(data.kpis.valorTotalInadimplente)} detail="Carteira consolidada" icon={<Wallet size={20} />} tone="red" />
-        <KpiCard title="Contratos em Aberto" value={number.format(data.kpis.contratosEmAberto)} detail="Cobranças ativas" icon={<AlertCircle size={20} />} tone="orange" />
-        <KpiCard title="Atraso Médio" value={`${data.kpis.atrasoMedio.toFixed(2)} dias`} detail="Média operacional" icon={<Clock size={20} />} tone="blue" />
-        <KpiCard title="Taxa de Recuperação" value={percent(data.kpis.taxaRecuperacao)} detail="Indicador estratégico" icon={<Percent size={20} />} tone="green" />
+        <KpiCard
+          title="Taxa de Inadimplência"
+          value={percent(data.kpis.taxaInadimplencia)}
+          detail="Percentual de contratos em atraso ou inadimplência"
+          icon={<AlertTriangle size={20} />}
+          tone={data.kpis.taxaInadimplencia >= 50 ? "red" : data.kpis.taxaInadimplencia >= 20 ? "orange" : "green"}
+        />
+        <KpiCard title="Valor Total Inadimplente" value={currency.format(data.kpis.valorTotalInadimplente)} detail="Soma dos valores inadimplentes da carteira" icon={<Wallet size={20} />} tone="red" />
+        <KpiCard
+          title="Recuperação de Crédito"
+          value={percent(data.kpis.recuperacaoCredito)}
+          detail="Efetividade das ações de cobrança"
+          icon={<Percent size={20} />}
+          tone={data.kpis.recuperacaoCredito >= 70 ? "green" : data.kpis.recuperacaoCredito >= 40 ? "orange" : "red"}
+        />
+        <KpiCard title="Atraso Médio" value={`${data.kpis.atrasoMedio.toFixed(2)} dias`} detail="Média de dias em atraso dos contratos" icon={<Clock size={20} />} tone={data.kpis.atrasoMedio > 60 ? "red" : "orange"} />
+        <KpiCard title="Contratos Críticos" value={number.format(data.kpis.contratosCriticos)} detail="Contratos classificados como alto risco" icon={<ShieldAlert size={20} />} tone={data.kpis.contratosCriticos > 0 ? "red" : "green"} />
+        <KpiCard title="Score Médio de Risco" value={data.kpis.scoreMedioRisco.toFixed(2)} detail="Média geral do score de risco da carteira" icon={<Gauge size={20} />} tone={data.kpis.scoreMedioRisco > 70 ? "red" : data.kpis.scoreMedioRisco > 40 ? "orange" : "green"} />
+        <KpiCard
+          title="Tendência Temporal"
+          value={formatTrend(tendencia)}
+          detail={tendencia ? `Entre ${tendencia.mesAnterior} e ${tendencia.mesAtual}` : "Evolução temporal indisponível"}
+          icon={<TrendIcon size={20} />}
+          tone={tendencia?.direcao === "alta" ? "green" : tendencia?.direcao === "queda" ? "red" : "neutral"}
+        />
+        <KpiCard title="Contratos em Aberto" value={number.format(data.kpis.contratosEmAberto)} detail="Cobranças ativas na visão filtrada" icon={<Activity size={20} />} tone="blue" />
       </section>
 
       <section className="grid gap-6 xl:grid-cols-2">
@@ -80,4 +105,13 @@ export function DashboardExecutivo() {
       </section>
     </div>
   );
+}
+
+function formatTrend(tendencia: Kpis["tendenciaTemporal"]) {
+  if (!tendencia) {
+    return "Sem dados";
+  }
+
+  const direction = tendencia.direcao === "alta" ? "Alta" : tendencia.direcao === "queda" ? "Queda" : "Estável";
+  return `${direction} ${Math.abs(tendencia.variacaoPercentual).toFixed(1)}%`;
 }

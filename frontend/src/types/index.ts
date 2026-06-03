@@ -1,11 +1,20 @@
 export type RiskLevel = "Baixo" | "Médio" | "Alto";
 
 export type Kpis = {
+  taxaInadimplencia: number;
+  recuperacaoCredito: number;
   valorTotalInadimplente: number;
   contratosEmAberto: number;
+  contratosCriticos: number;
   atrasoMedio: number;
   taxaRecuperacao: number;
   scoreMedioRisco: number;
+  tendenciaTemporal?: {
+    direcao: string;
+    variacaoPercentual: number;
+    mesAtual: string;
+    mesAnterior: string;
+  };
 };
 
 export type RegionData = {

@@ -216,16 +216,20 @@ def build_analytics(
     taxa_recuperacao = (total_valor_pago / total_valor_parcela * 100) if total_valor_parcela > 0 else 0
     atraso_medio = float(df_cobranca["Dias_Em_Atraso_Inicial"].mean()) if total_contratos else 0
     score_medio = float(df_cobranca["Score_Interno_Risco"].mean()) if total_contratos else 0
+    contratos_criticos = int((df_cobranca["Nivel_Risco"] == "Alto").sum())
     tendencia_temporal = build_tendencia_temporal(evolucao_pagamentos)
 
     kpis = {
+        "taxaInadimplencia": round_number((contratos_inadimplentes / total_contratos * 100) if total_contratos else 0),
         "inadimplencia": round_number((contratos_inadimplentes / total_contratos * 100) if total_contratos else 0),
+        "recuperacaoCredito": round_number(taxa_recuperacao),
         "recuperacao": round_number(taxa_recuperacao),
         "atrasoMedio": round_number(atraso_medio),
         "riscoRegional": regioes,
         "tendenciaTemporal": tendencia_temporal,
         "valorTotalInadimplente": round_number(total_valor_inadimplente),
         "contratosEmAberto": status_counts.get("Em Aberto", 0),
+        "contratosCriticos": contratos_criticos,
         "quantidadeContratosPorStatus": cobranca_status,
         "scoreMedioRisco": round_number(score_medio),
         "contratosPorNivelRisco": [{"nivel": item["nivel"], "quantidade": item["quantidade"]} for item in risk_count_records(df_cobranca)],

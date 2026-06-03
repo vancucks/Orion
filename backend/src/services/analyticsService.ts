@@ -247,7 +247,7 @@ async function readGeneratedAnalytics(): Promise<AnalyticsPayload | null> {
 
   return {
     ...dashboards,
-    kpis,
+    kpis: enrichStrategicKpis(kpis),
     insights,
     validacaoDados
   } as AnalyticsPayload;
@@ -255,6 +255,54 @@ async function readGeneratedAnalytics(): Promise<AnalyticsPayload | null> {
 
 async function readJson<T>(filePath: string) {
   return JSON.parse(await readFile(filePath, "utf8")) as T;
+}
+
+function enrichStrategicKpis(kpis: Record<string, unknown>) {
+  const taxaInadimplencia = getNumericKpi(kpis, "taxaInadimplencia", "inadimplencia");
+  const recuperacaoCredito = getNumericKpi(kpis, "recuperacaoCredito", "taxaRecuperacao", "recuperacao");
+  const contratosCriticos = getNumericKpi(kpis, "contratosCriticos") || getRiskLevelCount(kpis, "Alto");
+
+  return {
+    ...kpis,
+    taxaInadimplencia,
+    recuperacaoCredito,
+    contratosCriticos
+  };
+}
+
+function getNumericKpi(kpis: Record<string, unknown>, ...keys: string[]) {
+  for (const key of keys) {
+    const value = kpis[key];
+
+    if (typeof value === "number" && Number.isFinite(value)) {
+      return value;
+    }
+  }
+
+  return 0;
+}
+
+function getRiskLevelCount(kpis: Record<string, unknown>, level: string) {
+  const values = kpis.contratosPorNivelRisco;
+
+  if (!Array.isArray(values)) {
+    return 0;
+  }
+
+  const item = values.find((entry) => {
+    if (typeof entry !== "object" || entry === null || !("nivel" in entry)) {
+      return false;
+    }
+
+    return (entry as Record<string, unknown>).nivel === level;
+  });
+
+  if (item && typeof item === "object" && "quantidade" in item) {
+    const quantidade = (item as Record<string, unknown>).quantidade;
+    return typeof quantidade === "number" ? quantidade : 0;
+  }
+
+  return 0;
 }
 
 async function getSourceData() {
@@ -527,8 +575,11 @@ function buildAnalytics(contratos: ContratoAnalitico[], pagamentos: PagamentoAna
   });
 
   const kpis = {
+    taxaInadimplencia: round(contratos.length > 0 ? (contratos.filter((item) => item.valorInadimplente > 0 || item.diasAtraso > 0).length / contratos.length) * 100 : 0),
+    recuperacaoCredito: round(totalValorParcela > 0 ? (totalValorPago / totalValorParcela) * 100 : 0),
     valorTotalInadimplente: round(valorTotalInadimplente),
     contratosEmAberto: statusCounts["Em Aberto"] ?? 0,
+    contratosCriticos: contratos.filter((item) => item.nivelRisco === "Alto").length,
     atrasoMedio: round(averageBy(contratos, (item) => item.diasAtraso)),
     taxaRecuperacao: round(totalValorParcela > 0 ? (totalValorPago / totalValorParcela) * 100 : 0),
     scoreMedioRisco: round(averageBy(contratos, (item) => item.scoreRisco)),

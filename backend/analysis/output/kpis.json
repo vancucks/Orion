@@ -1,5 +1,7 @@
 {
+  "taxaInadimplencia": 100.0,
   "inadimplencia": 100.0,
+  "recuperacaoCredito": 73.51,
   "recuperacao": 73.51,
   "atrasoMedio": 99.88,
   "riscoRegional": [
@@ -52,6 +54,7 @@
   },
   "valorTotalInadimplente": 62308840.8,
   "contratosEmAberto": 4014,
+  "contratosCriticos": 8925,
   "quantidadeContratosPorStatus": [
     {
       "status": "Em Aberto",
