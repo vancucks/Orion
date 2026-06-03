@@ -1,0 +1,1150 @@
+{
+  "cobrancaStatus": [
+    {
+      "status": "Em Aberto",
+      "quantidade": 4014
+    },
+    {
+      "status": "Acordo Firmado",
+      "quantidade": 3407
+    },
+    {
+      "status": "Insucesso",
+      "quantidade": 1549
+    },
+    {
+      "status": "Ajuizado",
+      "quantidade": 1030
+    }
+  ],
+  "distribuicaoRisco": [
+    {
+      "nivel": "Alto",
+      "percentual": 89.2,
+      "cor": "#dc2626"
+    },
+    {
+      "nivel": "Médio",
+      "percentual": 10.2,
+      "cor": "#f97316"
+    },
+    {
+      "nivel": "Baixo",
+      "percentual": 0.5,
+      "cor": "#16a34a"
+    }
+  ],
+  "formasPagamento": [
+    {
+      "forma": "Boleto",
+      "percentual": 50.1
+    },
+    {
+      "forma": "Pix",
+      "percentual": 34.9
+    },
+    {
+      "forma": "Debito Automatico",
+      "percentual": 15.0
+    }
+  ],
+  "regioes": [
+    {
+      "regiao": "Nordeste",
+      "contratos": 3691,
+      "valorInadimplente": 22748368.22,
+      "exposicaoFinanceira": 22748368.22,
+      "riscoAlto": 3310,
+      "percentualRiscoAlto": 89.7
+    },
+    {
+      "regiao": "Sudeste",
+      "contratos": 3529,
+      "valorInadimplente": 21556882.87,
+      "exposicaoFinanceira": 21556882.87,
+      "riscoAlto": 3137,
+      "percentualRiscoAlto": 88.9
+    },
+    {
+      "regiao": "Sul",
+      "contratos": 1517,
+      "valorInadimplente": 9828722.06,
+      "exposicaoFinanceira": 9828722.06,
+      "riscoAlto": 1356,
+      "percentualRiscoAlto": 89.4
+    },
+    {
+      "regiao": "Centro-Oeste",
+      "contratos": 779,
+      "valorInadimplente": 5026348.66,
+      "exposicaoFinanceira": 5026348.66,
+      "riscoAlto": 686,
+      "percentualRiscoAlto": 88.1
+    },
+    {
+      "regiao": "Norte",
+      "contratos": 484,
+      "valorInadimplente": 3148518.99,
+      "exposicaoFinanceira": 3148518.99,
+      "riscoAlto": 436,
+      "percentualRiscoAlto": 90.1
+    }
+  ],
+  "evolucaoPagamentos": [
+    {
+      "mes": "Ago/25",
+      "pagamentos": 5082,
+      "recuperado": 3898928.33
+    },
+    {
+      "mes": "Set/25",
+      "pagamentos": 4900,
+      "recuperado": 3731637.93
+    },
+    {
+      "mes": "Out/25",
+      "pagamentos": 5024,
+      "recuperado": 3830149.11
+    },
+    {
+      "mes": "Nov/25",
+      "pagamentos": 4805,
+      "recuperado": 3683200.5
+    },
+    {
+      "mes": "Dez/25",
+      "pagamentos": 4984,
+      "recuperado": 3741015.26
+    },
+    {
+      "mes": "Jan/26",
+      "pagamentos": 4964,
+      "recuperado": 3778257.73
+    },
+    {
+      "mes": "Fev/26",
+      "pagamentos": 4520,
+      "recuperado": 3495120.99
+    },
+    {
+      "mes": "Mar/26",
+      "pagamentos": 4176,
+      "recuperado": 3220804.74
+    },
+    {
+      "mes": "Abr/26",
+      "pagamentos": 1197,
+      "recuperado": 902456.48
+    },
+    {
+      "mes": "Mai/26",
+      "pagamentos": 520,
+      "recuperado": 403285.71
+    },
+    {
+      "mes": "Jun/26",
+      "pagamentos": 265,
+      "recuperado": 207720.22
+    },
+    {
+      "mes": "Jul/26",
+      "pagamentos": 53,
+      "recuperado": 43391.44
+    }
+  ],
+  "assessorias": [
+    {
+      "nome": "Vértice Asset & Cobrança",
+      "contratos": 3003,
+      "emAberto": 1187
+    },
+    {
+      "nome": "Fênix Recuperação de Crédito",
+      "contratos": 2547,
+      "emAberto": 1015
+    },
+    {
+      "nome": "Nexus Mediação Financeira",
+      "contratos": 2037,
+      "emAberto": 855
+    },
+    {
+      "nome": "Acerta Crédito Integrado",
+      "contratos": 1926,
+      "emAberto": 754
+    },
+    {
+      "nome": "fênix recuperação de crédito",
+      "contratos": 487,
+      "emAberto": 203
+    }
+  ],
+  "clientesPrioritarios": [
+    {
+      "idContrato": "CONTR_2026_00442",
+      "cliente": "Contrato CONTR_2026_00442",
+      "assessoria": "Vértice Asset & Cobrança",
+      "dataEnvioAssessoria": "2026-02-14",
+      "diasAtraso": 3650,
+      "valorInadimplente": 21003.52,
+      "statusCobranca": "Em Aberto",
+      "scoreRisco": 3.0,
+      "regiao": "Nordeste",
+      "nivelRisco": "Alto",
+      "formaPagamento": "Pix",
+      "indicadorContemplacao": "Nao contemplado"
+    },
+    {
+      "idContrato": "CONTR_2026_07961",
+      "cliente": "Contrato CONTR_2026_07961",
+      "assessoria": "Acerta Crédito Integrado",
+      "dataEnvioAssessoria": "2026-03-07",
+      "diasAtraso": 3650,
+      "valorInadimplente": 16051.56,
+      "statusCobranca": "Em Aberto",
+      "scoreRisco": 79.0,
+      "regiao": "Nordeste",
+      "nivelRisco": "Alto",
+      "formaPagamento": "Debito Automatico",
+      "indicadorContemplacao": "Nao contemplado"
+    },
+    {
+      "idContrato": "CONTR_2026_06298",
+      "cliente": "Contrato CONTR_2026_06298",
+      "assessoria": "Fênix Recuperação de Crédito",
+      "dataEnvioAssessoria": "2026-04-06",
+      "diasAtraso": 3650,
+      "valorInadimplente": 12808.62,
+      "statusCobranca": "Acordo Firmado",
+      "scoreRisco": 65.0,
+      "regiao": "Centro-Oeste",
+      "nivelRisco": "Alto",
+      "formaPagamento": "Pix",
+      "indicadorContemplacao": "Nao contemplado"
+    },
+    {
+      "idContrato": "CONTR_2026_05344",
+      "cliente": "Contrato CONTR_2026_05344",
+      "assessoria": "Fênix Recuperação de Crédito",
+      "dataEnvioAssessoria": "2026-03-08",
+      "diasAtraso": 3650,
+      "valorInadimplente": 10829.9,
+      "statusCobranca": "Em Aberto",
+      "scoreRisco": 10.0,
+      "regiao": "Sudeste",
+      "nivelRisco": "Alto",
+      "formaPagamento": "Boleto",
+      "indicadorContemplacao": "Nao contemplado"
+    },
+    {
+      "idContrato": "CONTR_2026_02332",
+      "cliente": "Contrato CONTR_2026_02332",
+      "assessoria": "Fênix Recuperação de Crédito",
+      "dataEnvioAssessoria": "2026-03-03",
+      "diasAtraso": 3650,
+      "valorInadimplente": 10248.27,
+      "statusCobranca": "Em Aberto",
+      "scoreRisco": 66.0,
+      "regiao": "Nordeste",
+      "nivelRisco": "Alto",
+      "formaPagamento": "Boleto",
+      "indicadorContemplacao": "Contemplado"
+    },
+    {
+      "idContrato": "CONTR_2026_06185",
+      "cliente": "Contrato CONTR_2026_06185",
+      "assessoria": "Fênix Recuperação de Crédito",
+      "dataEnvioAssessoria": "2026-02-17",
+      "diasAtraso": 3650,
+      "valorInadimplente": 7944.19,
+      "statusCobranca": "Em Aberto",
+      "scoreRisco": 100.0,
+      "regiao": "Nordeste",
+      "nivelRisco": "Alto",
+      "formaPagamento": "Pix",
+      "indicadorContemplacao": "Nao contemplado"
+    },
+    {
+      "idContrato": "CONTR_2026_06936",
+      "cliente": "Contrato CONTR_2026_06936",
+      "assessoria": "Vértice Asset & Cobrança",
+      "dataEnvioAssessoria": "2026-03-29",
+      "diasAtraso": 3650,
+      "valorInadimplente": 7208.25,
+      "statusCobranca": "Em Aberto",
+      "scoreRisco": 90.0,
+      "regiao": "Nordeste",
+      "nivelRisco": "Alto",
+      "formaPagamento": "Pix",
+      "indicadorContemplacao": "Nao contemplado"
+    },
+    {
+      "idContrato": "CONTR_2026_04766",
+      "cliente": "Contrato CONTR_2026_04766",
+      "assessoria": "Vértice Asset & Cobrança",
+      "dataEnvioAssessoria": "2026-01-30",
+      "diasAtraso": 3650,
+      "valorInadimplente": 7179.48,
+      "statusCobranca": "Em Aberto",
+      "scoreRisco": 91.0,
+      "regiao": "Sudeste",
+      "nivelRisco": "Alto",
+      "formaPagamento": "Boleto",
+      "indicadorContemplacao": "Nao contemplado"
+    },
+    {
+      "idContrato": "CONTR_2026_08301",
+      "cliente": "Contrato CONTR_2026_08301",
+      "assessoria": "Acerta Crédito Integrado",
+      "dataEnvioAssessoria": "2026-02-14",
+      "diasAtraso": 3650,
+      "valorInadimplente": 6779.93,
+      "statusCobranca": "Insucesso",
+      "scoreRisco": 44.0,
+      "regiao": "Sudeste",
+      "nivelRisco": "Alto",
+      "formaPagamento": "Debito Automatico",
+      "indicadorContemplacao": "Contemplado"
+    },
+    {
+      "idContrato": "CONTR_2026_02431",
+      "cliente": "Contrato CONTR_2026_02431",
+      "assessoria": "Nexus Mediação Financeira",
+      "dataEnvioAssessoria": "2026-03-23",
+      "diasAtraso": 3650,
+      "valorInadimplente": 6621.13,
+      "statusCobranca": "Em Aberto",
+      "scoreRisco": 95.0,
+      "regiao": "Sudeste",
+      "nivelRisco": "Alto",
+      "formaPagamento": "Pix",
+      "indicadorContemplacao": "Nao contemplado"
+    },
+    {
+      "idContrato": "CONTR_2026_05422",
+      "cliente": "Contrato CONTR_2026_05422",
+      "assessoria": "Vértice Asset & Cobrança",
+      "dataEnvioAssessoria": "2026-04-27",
+      "diasAtraso": 3650,
+      "valorInadimplente": 6137.22,
+      "statusCobranca": "Ajuizado",
+      "scoreRisco": 25.0,
+      "regiao": "Nordeste",
+      "nivelRisco": "Alto",
+      "formaPagamento": "Boleto",
+      "indicadorContemplacao": "Nao contemplado"
+    },
+    {
+      "idContrato": "CONTR_2026_09242",
+      "cliente": "Contrato CONTR_2026_09242",
+      "assessoria": "Nexus Mediação Financeira",
+      "dataEnvioAssessoria": "2026-02-03",
+      "diasAtraso": 3650,
+      "valorInadimplente": 5938.56,
+      "statusCobranca": "Acordo Firmado",
+      "scoreRisco": 86.0,
+      "regiao": "Sudeste",
+      "nivelRisco": "Alto",
+      "formaPagamento": "Boleto",
+      "indicadorContemplacao": "Nao contemplado"
+    },
+    {
+      "idContrato": "CONTR_2026_05719",
+      "cliente": "Contrato CONTR_2026_05719",
+      "assessoria": "Fênix Recuperação de Crédito",
+      "dataEnvioAssessoria": "2026-03-12",
+      "diasAtraso": 3650,
+      "valorInadimplente": 5468.37,
+      "statusCobranca": "Acordo Firmado",
+      "scoreRisco": 84.0,
+      "regiao": "Nordeste",
+      "nivelRisco": "Alto",
+      "formaPagamento": "Pix",
+      "indicadorContemplacao": "Nao contemplado"
+    },
+    {
+      "idContrato": "CONTR_2026_02316",
+      "cliente": "Contrato CONTR_2026_02316",
+      "assessoria": "Fênix Recuperação de Crédito",
+      "dataEnvioAssessoria": "2026-03-06",
+      "diasAtraso": 3650,
+      "valorInadimplente": 4830.34,
+      "statusCobranca": "Ajuizado",
+      "scoreRisco": 15.0,
+      "regiao": "Sudeste",
+      "nivelRisco": "Alto",
+      "formaPagamento": "Pix",
+      "indicadorContemplacao": "Contemplado"
+    },
+    {
+      "idContrato": "CONTR_2026_06953",
+      "cliente": "Contrato CONTR_2026_06953",
+      "assessoria": "Vértice Asset & Cobrança",
+      "dataEnvioAssessoria": "2026-02-28",
+      "diasAtraso": 3650,
+      "valorInadimplente": 4812.73,
+      "statusCobranca": "Em Aberto",
+      "scoreRisco": 77.0,
+      "regiao": "Sudeste",
+      "nivelRisco": "Alto",
+      "formaPagamento": "Boleto",
+      "indicadorContemplacao": "Contemplado"
+    },
+    {
+      "idContrato": "CONTR_2026_04551",
+      "cliente": "Contrato CONTR_2026_04551",
+      "assessoria": "fênix recuperação de crédito",
+      "dataEnvioAssessoria": "2026-04-23",
+      "diasAtraso": 3650,
+      "valorInadimplente": 4700.2,
+      "statusCobranca": "Acordo Firmado",
+      "scoreRisco": 57.0,
+      "regiao": "Centro-Oeste",
+      "nivelRisco": "Alto",
+      "formaPagamento": "Pix",
+      "indicadorContemplacao": "Contemplado"
+    },
+    {
+      "idContrato": "CONTR_2026_04180",
+      "cliente": "Contrato CONTR_2026_04180",
+      "assessoria": "Vértice Asset & Cobrança",
+      "dataEnvioAssessoria": "2026-02-16",
+      "diasAtraso": 3650,
+      "valorInadimplente": 4059.97,
+      "statusCobranca": "Em Aberto",
+      "scoreRisco": 100.0,
+      "regiao": "Sudeste",
+      "nivelRisco": "Alto",
+      "formaPagamento": "Pix",
+      "indicadorContemplacao": "Nao contemplado"
+    },
+    {
+      "idContrato": "CONTR_2026_08372",
+      "cliente": "Contrato CONTR_2026_08372",
+      "assessoria": "Vértice Asset & Cobrança",
+      "dataEnvioAssessoria": "2026-02-16",
+      "diasAtraso": 3650,
+      "valorInadimplente": 4056.57,
+      "statusCobranca": "Em Aberto",
+      "scoreRisco": 45.0,
+      "regiao": "Sul",
+      "nivelRisco": "Alto",
+      "formaPagamento": "Pix",
+      "indicadorContemplacao": "Nao contemplado"
+    },
+    {
+      "idContrato": "CONTR_2026_08242",
+      "cliente": "Contrato CONTR_2026_08242",
+      "assessoria": "Nexus Mediação Financeira",
+      "dataEnvioAssessoria": "2026-01-07",
+      "diasAtraso": 3650,
+      "valorInadimplente": 3932.9,
+      "statusCobranca": "Em Aberto",
+      "scoreRisco": 92.0,
+      "regiao": "Sudeste",
+      "nivelRisco": "Alto",
+      "formaPagamento": "Boleto",
+      "indicadorContemplacao": "Nao contemplado"
+    },
+    {
+      "idContrato": "CONTR_2026_01863",
+      "cliente": "Contrato CONTR_2026_01863",
+      "assessoria": "Fênix Recuperação de Crédito",
+      "dataEnvioAssessoria": "2026-04-25",
+      "diasAtraso": 3650,
+      "valorInadimplente": 3706.14,
+      "statusCobranca": "Acordo Firmado",
+      "scoreRisco": 83.0,
+      "regiao": "Nordeste",
+      "nivelRisco": "Alto",
+      "formaPagamento": "Boleto",
+      "indicadorContemplacao": "Contemplado"
+    },
+    {
+      "idContrato": "CONTR_2026_04164",
+      "cliente": "Contrato CONTR_2026_04164",
+      "assessoria": "Vértice Asset & Cobrança",
+      "dataEnvioAssessoria": "2026-02-20",
+      "diasAtraso": 3650,
+      "valorInadimplente": 3221.93,
+      "statusCobranca": "Em Aberto",
+      "scoreRisco": 58.0,
+      "regiao": "Sul",
+      "nivelRisco": "Alto",
+      "formaPagamento": "Boleto",
+      "indicadorContemplacao": "Contemplado"
+    },
+    {
+      "idContrato": "CONTR_2026_03009",
+      "cliente": "Contrato CONTR_2026_03009",
+      "assessoria": "Nexus Mediação Financeira",
+      "dataEnvioAssessoria": "2026-03-11",
+      "diasAtraso": 3650,
+      "valorInadimplente": 3097.5,
+      "statusCobranca": "Insucesso",
+      "scoreRisco": 52.0,
+      "regiao": "Nordeste",
+      "nivelRisco": "Alto",
+      "formaPagamento": "Pix",
+      "indicadorContemplacao": "Nao contemplado"
+    },
+    {
+      "idContrato": "CONTR_2026_01983",
+      "cliente": "Contrato CONTR_2026_01983",
+      "assessoria": "Vértice Asset & Cobrança",
+      "dataEnvioAssessoria": "2026-01-23",
+      "diasAtraso": 3650,
+      "valorInadimplente": 2622.15,
+      "statusCobranca": "Em Aberto",
+      "scoreRisco": 19.0,
+      "regiao": "Nordeste",
+      "nivelRisco": "Alto",
+      "formaPagamento": "Pix",
+      "indicadorContemplacao": "Nao contemplado"
+    },
+    {
+      "idContrato": "CONTR_2026_02183",
+      "cliente": "Contrato CONTR_2026_02183",
+      "assessoria": "Fênix Recuperação de Crédito",
+      "dataEnvioAssessoria": "2026-02-17",
+      "diasAtraso": 3650,
+      "valorInadimplente": 2432.88,
+      "statusCobranca": "Ajuizado",
+      "scoreRisco": 99.0,
+      "regiao": "Nordeste",
+      "nivelRisco": "Alto",
+      "formaPagamento": "Boleto",
+      "indicadorContemplacao": "Nao contemplado"
+    },
+    {
+      "idContrato": "CONTR_2026_05337",
+      "cliente": "Contrato CONTR_2026_05337",
+      "assessoria": "Vértice Asset & Cobrança",
+      "dataEnvioAssessoria": "2026-04-19",
+      "diasAtraso": 3650,
+      "valorInadimplente": 2309.25,
+      "statusCobranca": "Em Aberto",
+      "scoreRisco": 64.0,
+      "regiao": "Sudeste",
+      "nivelRisco": "Alto",
+      "formaPagamento": "Boleto",
+      "indicadorContemplacao": "Nao contemplado"
+    },
+    {
+      "idContrato": "CONTR_2026_00944",
+      "cliente": "Contrato CONTR_2026_00944",
+      "assessoria": "Acerta Crédito Integrado",
+      "dataEnvioAssessoria": "2026-02-26",
+      "diasAtraso": 3650,
+      "valorInadimplente": 2023.95,
+      "statusCobranca": "Acordo Firmado",
+      "scoreRisco": 6.0,
+      "regiao": "Sudeste",
+      "nivelRisco": "Alto",
+      "formaPagamento": "Boleto",
+      "indicadorContemplacao": "Contemplado"
+    },
+    {
+      "idContrato": "CONTR_2026_00055",
+      "cliente": "Contrato CONTR_2026_00055",
+      "assessoria": "Nexus Mediação Financeira",
+      "dataEnvioAssessoria": "2026-01-22",
+      "diasAtraso": 3650,
+      "valorInadimplente": 1893.23,
+      "statusCobranca": "Em Aberto",
+      "scoreRisco": 83.0,
+      "regiao": "Centro-Oeste",
+      "nivelRisco": "Alto",
+      "formaPagamento": "Boleto",
+      "indicadorContemplacao": "Nao contemplado"
+    },
+    {
+      "idContrato": "CONTR_2026_09572",
+      "cliente": "Contrato CONTR_2026_09572",
+      "assessoria": "Fênix Recuperação de Crédito",
+      "dataEnvioAssessoria": "2026-03-11",
+      "diasAtraso": 3650,
+      "valorInadimplente": 1709.66,
+      "statusCobranca": "Em Aberto",
+      "scoreRisco": 62.0,
+      "regiao": "Sudeste",
+      "nivelRisco": "Alto",
+      "formaPagamento": "Debito Automatico",
+      "indicadorContemplacao": "Nao contemplado"
+    },
+    {
+      "idContrato": "CONTR_2026_05652",
+      "cliente": "Contrato CONTR_2026_05652",
+      "assessoria": "Nexus Mediação Financeira",
+      "dataEnvioAssessoria": "2026-03-18",
+      "diasAtraso": 3650,
+      "valorInadimplente": 1567.02,
+      "statusCobranca": "Ajuizado",
+      "scoreRisco": 4.0,
+      "regiao": "Nordeste",
+      "nivelRisco": "Alto",
+      "formaPagamento": "Debito Automatico",
+      "indicadorContemplacao": "Contemplado"
+    },
+    {
+      "idContrato": "CONTR_2026_06686",
+      "cliente": "Contrato CONTR_2026_06686",
+      "assessoria": "Fênix Recuperação de Crédito",
+      "dataEnvioAssessoria": "2026-02-24",
+      "diasAtraso": 3650,
+      "valorInadimplente": 1343.64,
+      "statusCobranca": "Em Aberto",
+      "scoreRisco": 95.0,
+      "regiao": "Sudeste",
+      "nivelRisco": "Alto",
+      "formaPagamento": "Boleto",
+      "indicadorContemplacao": "Nao contemplado"
+    },
+    {
+      "idContrato": "CONTR_2026_08913",
+      "cliente": "Contrato CONTR_2026_08913",
+      "assessoria": "Acerta Crédito Integrado",
+      "dataEnvioAssessoria": "2026-04-12",
+      "diasAtraso": 207,
+      "valorInadimplente": 7509.51,
+      "statusCobranca": "Acordo Firmado",
+      "scoreRisco": 62.0,
+      "regiao": "Centro-Oeste",
+      "nivelRisco": "Alto",
+      "formaPagamento": "Boleto",
+      "indicadorContemplacao": "Contemplado"
+    },
+    {
+      "idContrato": "CONTR_2026_09897",
+      "cliente": "Contrato CONTR_2026_09897",
+      "assessoria": "Acerta Crédito Integrado",
+      "dataEnvioAssessoria": "2026-01-05",
+      "diasAtraso": 197,
+      "valorInadimplente": 2665.87,
+      "statusCobranca": "Insucesso",
+      "scoreRisco": 62.0,
+      "regiao": "Sudeste",
+      "nivelRisco": "Alto",
+      "formaPagamento": "Pix",
+      "indicadorContemplacao": "Contemplado"
+    },
+    {
+      "idContrato": "CONTR_2026_05329",
+      "cliente": "Contrato CONTR_2026_05329",
+      "assessoria": "Vértice Asset & Cobrança",
+      "dataEnvioAssessoria": "2026-02-19",
+      "diasAtraso": 189,
+      "valorInadimplente": 6418.73,
+      "statusCobranca": "Insucesso",
+      "scoreRisco": 94.0,
+      "regiao": "Sudeste",
+      "nivelRisco": "Alto",
+      "formaPagamento": "Pix",
+      "indicadorContemplacao": "Nao contemplado"
+    },
+    {
+      "idContrato": "CONTR_2026_03285",
+      "cliente": "Contrato CONTR_2026_03285",
+      "assessoria": "Vértice Asset & Cobrança",
+      "dataEnvioAssessoria": "2026-03-22",
+      "diasAtraso": 186,
+      "valorInadimplente": 4030.83,
+      "statusCobranca": "Em Aberto",
+      "scoreRisco": 92.0,
+      "regiao": "Norte",
+      "nivelRisco": "Alto",
+      "formaPagamento": "Boleto",
+      "indicadorContemplacao": "Contemplado"
+    },
+    {
+      "idContrato": "CONTR_2026_01692",
+      "cliente": "Contrato CONTR_2026_01692",
+      "assessoria": "Nexus Mediação Financeira",
+      "dataEnvioAssessoria": "2026-01-19",
+      "diasAtraso": 185,
+      "valorInadimplente": 5885.27,
+      "statusCobranca": "Ajuizado",
+      "scoreRisco": 11.0,
+      "regiao": "Nordeste",
+      "nivelRisco": "Alto",
+      "formaPagamento": "Pix",
+      "indicadorContemplacao": "Nao contemplado"
+    },
+    {
+      "idContrato": "CONTR_2026_02167",
+      "cliente": "Contrato CONTR_2026_02167",
+      "assessoria": "Nexus Mediação Financeira",
+      "dataEnvioAssessoria": "2026-02-13",
+      "diasAtraso": 185,
+      "valorInadimplente": 4913.19,
+      "statusCobranca": "Acordo Firmado",
+      "scoreRisco": 22.0,
+      "regiao": "Sudeste",
+      "nivelRisco": "Alto",
+      "formaPagamento": "Boleto",
+      "indicadorContemplacao": "Nao contemplado"
+    },
+    {
+      "idContrato": "CONTR_2026_01199",
+      "cliente": "Contrato CONTR_2026_01199",
+      "assessoria": "Acerta Crédito Integrado",
+      "dataEnvioAssessoria": "2026-04-15",
+      "diasAtraso": 181,
+      "valorInadimplente": 5454.69,
+      "statusCobranca": "Em Aberto",
+      "scoreRisco": 62.0,
+      "regiao": "Centro-Oeste",
+      "nivelRisco": "Alto",
+      "formaPagamento": "Pix",
+      "indicadorContemplacao": "Nao contemplado"
+    },
+    {
+      "idContrato": "CONTR_2026_06505",
+      "cliente": "Contrato CONTR_2026_06505",
+      "assessoria": "Fênix Recuperação de Crédito",
+      "dataEnvioAssessoria": "2026-01-20",
+      "diasAtraso": 179,
+      "valorInadimplente": 9324.28,
+      "statusCobranca": "Acordo Firmado",
+      "scoreRisco": 7.0,
+      "regiao": "Sudeste",
+      "nivelRisco": "Alto",
+      "formaPagamento": "Boleto",
+      "indicadorContemplacao": "Nao contemplado"
+    },
+    {
+      "idContrato": "CONTR_2026_00436",
+      "cliente": "Contrato CONTR_2026_00436",
+      "assessoria": "Acerta Crédito Integrado",
+      "dataEnvioAssessoria": "2026-03-13",
+      "diasAtraso": 178,
+      "valorInadimplente": 7136.0,
+      "statusCobranca": "Em Aberto",
+      "scoreRisco": 47.0,
+      "regiao": "Sudeste",
+      "nivelRisco": "Alto",
+      "formaPagamento": "Boleto",
+      "indicadorContemplacao": "Nao contemplado"
+    },
+    {
+      "idContrato": "CONTR_2026_02185",
+      "cliente": "Contrato CONTR_2026_02185",
+      "assessoria": "Nexus Mediação Financeira",
+      "dataEnvioAssessoria": "2026-01-15",
+      "diasAtraso": 178,
+      "valorInadimplente": 4479.41,
+      "statusCobranca": "Acordo Firmado",
+      "scoreRisco": 29.0,
+      "regiao": "Nordeste",
+      "nivelRisco": "Alto",
+      "formaPagamento": "Pix",
+      "indicadorContemplacao": "Nao contemplado"
+    },
+    {
+      "idContrato": "CONTR_2026_09718",
+      "cliente": "Contrato CONTR_2026_09718",
+      "assessoria": "Vértice Asset & Cobrança",
+      "dataEnvioAssessoria": "2026-02-14",
+      "diasAtraso": 177,
+      "valorInadimplente": 9906.09,
+      "statusCobranca": "Em Aberto",
+      "scoreRisco": 52.0,
+      "regiao": "Sudeste",
+      "nivelRisco": "Alto",
+      "formaPagamento": "Boleto",
+      "indicadorContemplacao": "Contemplado"
+    },
+    {
+      "idContrato": "CONTR_2026_08543",
+      "cliente": "Contrato CONTR_2026_08543",
+      "assessoria": "Acerta Crédito Integrado",
+      "dataEnvioAssessoria": "2026-01-06",
+      "diasAtraso": 176,
+      "valorInadimplente": 11552.6,
+      "statusCobranca": "Em Aberto",
+      "scoreRisco": 73.0,
+      "regiao": "Nordeste",
+      "nivelRisco": "Alto",
+      "formaPagamento": "Pix",
+      "indicadorContemplacao": "Contemplado"
+    },
+    {
+      "idContrato": "CONTR_2026_08689",
+      "cliente": "Contrato CONTR_2026_08689",
+      "assessoria": "Fênix Recuperação de Crédito",
+      "dataEnvioAssessoria": "2026-03-01",
+      "diasAtraso": 176,
+      "valorInadimplente": 7681.32,
+      "statusCobranca": "Acordo Firmado",
+      "scoreRisco": 44.0,
+      "regiao": "Sul",
+      "nivelRisco": "Alto",
+      "formaPagamento": "Boleto",
+      "indicadorContemplacao": "Contemplado"
+    },
+    {
+      "idContrato": "CONTR_2026_06683",
+      "cliente": "Contrato CONTR_2026_06683",
+      "assessoria": "Acerta Crédito Integrado",
+      "dataEnvioAssessoria": "2026-01-22",
+      "diasAtraso": 175,
+      "valorInadimplente": 27209.22,
+      "statusCobranca": "Em Aberto",
+      "scoreRisco": 81.0,
+      "regiao": "Sul",
+      "nivelRisco": "Alto",
+      "formaPagamento": "Boleto",
+      "indicadorContemplacao": "Nao contemplado"
+    },
+    {
+      "idContrato": "CONTR_2026_08054",
+      "cliente": "Contrato CONTR_2026_08054",
+      "assessoria": "Nexus Mediação Financeira",
+      "dataEnvioAssessoria": "2026-03-29",
+      "diasAtraso": 175,
+      "valorInadimplente": 4193.13,
+      "statusCobranca": "Acordo Firmado",
+      "scoreRisco": 50.0,
+      "regiao": "Nordeste",
+      "nivelRisco": "Alto",
+      "formaPagamento": "Boleto",
+      "indicadorContemplacao": "Nao contemplado"
+    },
+    {
+      "idContrato": "CONTR_2026_01646",
+      "cliente": "Contrato CONTR_2026_01646",
+      "assessoria": "Acerta Crédito Integrado",
+      "dataEnvioAssessoria": "2026-01-10",
+      "diasAtraso": 174,
+      "valorInadimplente": 10386.64,
+      "statusCobranca": "Acordo Firmado",
+      "scoreRisco": 69.0,
+      "regiao": "Sul",
+      "nivelRisco": "Alto",
+      "formaPagamento": "Pix",
+      "indicadorContemplacao": "Nao contemplado"
+    },
+    {
+      "idContrato": "CONTR_2026_01072",
+      "cliente": "Contrato CONTR_2026_01072",
+      "assessoria": "Fênix Recuperação de Crédito",
+      "dataEnvioAssessoria": "2026-03-18",
+      "diasAtraso": 174,
+      "valorInadimplente": 10043.98,
+      "statusCobranca": "Acordo Firmado",
+      "scoreRisco": 39.0,
+      "regiao": "Sudeste",
+      "nivelRisco": "Alto",
+      "formaPagamento": "Pix",
+      "indicadorContemplacao": "Contemplado"
+    },
+    {
+      "idContrato": "CONTR_2026_06729",
+      "cliente": "Contrato CONTR_2026_06729",
+      "assessoria": "Vértice Asset & Cobrança",
+      "dataEnvioAssessoria": "2026-01-02",
+      "diasAtraso": 173,
+      "valorInadimplente": 14658.4,
+      "statusCobranca": "Em Aberto",
+      "scoreRisco": 84.0,
+      "regiao": "Sudeste",
+      "nivelRisco": "Alto",
+      "formaPagamento": "Debito Automatico",
+      "indicadorContemplacao": "Nao contemplado"
+    },
+    {
+      "idContrato": "CONTR_2026_05301",
+      "cliente": "Contrato CONTR_2026_05301",
+      "assessoria": "Acerta Crédito Integrado",
+      "dataEnvioAssessoria": "2026-02-05",
+      "diasAtraso": 173,
+      "valorInadimplente": 4693.03,
+      "statusCobranca": "Ajuizado",
+      "scoreRisco": 0.0,
+      "regiao": "Centro-Oeste",
+      "nivelRisco": "Alto",
+      "formaPagamento": "Boleto",
+      "indicadorContemplacao": "Contemplado"
+    },
+    {
+      "idContrato": "CONTR_2026_00103",
+      "cliente": "Contrato CONTR_2026_00103",
+      "assessoria": "Vértice Asset & Cobrança",
+      "dataEnvioAssessoria": "2026-04-19",
+      "diasAtraso": 172,
+      "valorInadimplente": 15429.39,
+      "statusCobranca": "Acordo Firmado",
+      "scoreRisco": 97.0,
+      "regiao": "Sudeste",
+      "nivelRisco": "Alto",
+      "formaPagamento": "Pix",
+      "indicadorContemplacao": "Contemplado"
+    }
+  ],
+  "alertas": [
+    {
+      "contrato": "CONTR_2026_00442",
+      "cliente": "Contrato CONTR_2026_00442",
+      "motivo": "Atraso superior a 120 dias com exposicao financeira elevada",
+      "diasAtraso": 3650,
+      "data": "2026-06-03",
+      "nivelRisco": "Alto",
+      "status": "Critico"
+    },
+    {
+      "contrato": "CONTR_2026_07961",
+      "cliente": "Contrato CONTR_2026_07961",
+      "motivo": "Atraso superior a 120 dias com exposicao financeira elevada",
+      "diasAtraso": 3650,
+      "data": "2026-06-03",
+      "nivelRisco": "Alto",
+      "status": "Critico"
+    },
+    {
+      "contrato": "CONTR_2026_06298",
+      "cliente": "Contrato CONTR_2026_06298",
+      "motivo": "Atraso superior a 120 dias com exposicao financeira elevada",
+      "diasAtraso": 3650,
+      "data": "2026-06-03",
+      "nivelRisco": "Alto",
+      "status": "Critico"
+    },
+    {
+      "contrato": "CONTR_2026_05344",
+      "cliente": "Contrato CONTR_2026_05344",
+      "motivo": "Atraso superior a 120 dias com exposicao financeira elevada",
+      "diasAtraso": 3650,
+      "data": "2026-06-03",
+      "nivelRisco": "Alto",
+      "status": "Critico"
+    },
+    {
+      "contrato": "CONTR_2026_02332",
+      "cliente": "Contrato CONTR_2026_02332",
+      "motivo": "Atraso superior a 120 dias com exposicao financeira elevada",
+      "diasAtraso": 3650,
+      "data": "2026-06-03",
+      "nivelRisco": "Alto",
+      "status": "Critico"
+    },
+    {
+      "contrato": "CONTR_2026_06185",
+      "cliente": "Contrato CONTR_2026_06185",
+      "motivo": "Atraso superior a 120 dias com exposicao financeira elevada",
+      "diasAtraso": 3650,
+      "data": "2026-06-03",
+      "nivelRisco": "Alto",
+      "status": "Critico"
+    },
+    {
+      "contrato": "CONTR_2026_06936",
+      "cliente": "Contrato CONTR_2026_06936",
+      "motivo": "Atraso superior a 120 dias com exposicao financeira elevada",
+      "diasAtraso": 3650,
+      "data": "2026-06-03",
+      "nivelRisco": "Alto",
+      "status": "Critico"
+    },
+    {
+      "contrato": "CONTR_2026_04766",
+      "cliente": "Contrato CONTR_2026_04766",
+      "motivo": "Atraso superior a 120 dias com exposicao financeira elevada",
+      "diasAtraso": 3650,
+      "data": "2026-06-03",
+      "nivelRisco": "Alto",
+      "status": "Critico"
+    },
+    {
+      "contrato": "CONTR_2026_08301",
+      "cliente": "Contrato CONTR_2026_08301",
+      "motivo": "Atraso superior a 120 dias com exposicao financeira elevada",
+      "diasAtraso": 3650,
+      "data": "2026-06-03",
+      "nivelRisco": "Alto",
+      "status": "Critico"
+    },
+    {
+      "contrato": "CONTR_2026_02431",
+      "cliente": "Contrato CONTR_2026_02431",
+      "motivo": "Atraso superior a 120 dias com exposicao financeira elevada",
+      "diasAtraso": 3650,
+      "data": "2026-06-03",
+      "nivelRisco": "Alto",
+      "status": "Critico"
+    },
+    {
+      "contrato": "CONTR_2026_05422",
+      "cliente": "Contrato CONTR_2026_05422",
+      "motivo": "Status ajuizado exige acompanhamento juridico e financeiro",
+      "diasAtraso": 3650,
+      "data": "2026-06-03",
+      "nivelRisco": "Alto",
+      "status": "Critico"
+    },
+    {
+      "contrato": "CONTR_2026_09242",
+      "cliente": "Contrato CONTR_2026_09242",
+      "motivo": "Atraso superior a 120 dias com exposicao financeira elevada",
+      "diasAtraso": 3650,
+      "data": "2026-06-03",
+      "nivelRisco": "Alto",
+      "status": "Critico"
+    },
+    {
+      "contrato": "CONTR_2026_05719",
+      "cliente": "Contrato CONTR_2026_05719",
+      "motivo": "Atraso superior a 120 dias com exposicao financeira elevada",
+      "diasAtraso": 3650,
+      "data": "2026-06-03",
+      "nivelRisco": "Alto",
+      "status": "Critico"
+    },
+    {
+      "contrato": "CONTR_2026_02316",
+      "cliente": "Contrato CONTR_2026_02316",
+      "motivo": "Status ajuizado exige acompanhamento juridico e financeiro",
+      "diasAtraso": 3650,
+      "data": "2026-06-03",
+      "nivelRisco": "Alto",
+      "status": "Critico"
+    },
+    {
+      "contrato": "CONTR_2026_06953",
+      "cliente": "Contrato CONTR_2026_06953",
+      "motivo": "Atraso superior a 120 dias com exposicao financeira elevada",
+      "diasAtraso": 3650,
+      "data": "2026-06-03",
+      "nivelRisco": "Alto",
+      "status": "Critico"
+    },
+    {
+      "contrato": "CONTR_2026_04551",
+      "cliente": "Contrato CONTR_2026_04551",
+      "motivo": "Atraso superior a 120 dias com exposicao financeira elevada",
+      "diasAtraso": 3650,
+      "data": "2026-06-03",
+      "nivelRisco": "Alto",
+      "status": "Critico"
+    },
+    {
+      "contrato": "CONTR_2026_04180",
+      "cliente": "Contrato CONTR_2026_04180",
+      "motivo": "Atraso superior a 120 dias com exposicao financeira elevada",
+      "diasAtraso": 3650,
+      "data": "2026-06-03",
+      "nivelRisco": "Alto",
+      "status": "Critico"
+    },
+    {
+      "contrato": "CONTR_2026_08372",
+      "cliente": "Contrato CONTR_2026_08372",
+      "motivo": "Atraso superior a 120 dias com exposicao financeira elevada",
+      "diasAtraso": 3650,
+      "data": "2026-06-03",
+      "nivelRisco": "Alto",
+      "status": "Critico"
+    },
+    {
+      "contrato": "CONTR_2026_08242",
+      "cliente": "Contrato CONTR_2026_08242",
+      "motivo": "Atraso superior a 120 dias com exposicao financeira elevada",
+      "diasAtraso": 3650,
+      "data": "2026-06-03",
+      "nivelRisco": "Alto",
+      "status": "Critico"
+    },
+    {
+      "contrato": "CONTR_2026_01863",
+      "cliente": "Contrato CONTR_2026_01863",
+      "motivo": "Atraso superior a 120 dias com exposicao financeira elevada",
+      "diasAtraso": 3650,
+      "data": "2026-06-03",
+      "nivelRisco": "Alto",
+      "status": "Critico"
+    }
+  ],
+  "pagamentosResumo": {
+    "totalRegistrados": 100000,
+    "maiorNumeroParcela": 60,
+    "totalValorPago": 55440309.28,
+    "totalValorParcela": 75422500.0
+  },
+  "patterns": {
+    "regioesMaiorInadimplencia": [
+      "Nordeste",
+      "Sudeste",
+      "Sul"
+    ],
+    "regiaoMaiorInadimplencia": "Nordeste",
+    "statusMaisFrequente": "Em Aberto",
+    "maiorConcentracaoRisco": "Norte",
+    "formaPagamentoPredominante": "Boleto",
+    "comportamentoTemporalPagamentos": "queda de -79.1% entre Jun/26 e Jul/26",
+    "contratosComMaiorAtraso": [
+      {
+        "idContrato": "CONTR_2026_00442",
+        "diasAtraso": 3650,
+        "valorInadimplente": 21003.52,
+        "nivelRisco": "Alto"
+      },
+      {
+        "idContrato": "CONTR_2026_07961",
+        "diasAtraso": 3650,
+        "valorInadimplente": 16051.56,
+        "nivelRisco": "Alto"
+      },
+      {
+        "idContrato": "CONTR_2026_06298",
+        "diasAtraso": 3650,
+        "valorInadimplente": 12808.62,
+        "nivelRisco": "Alto"
+      },
+      {
+        "idContrato": "CONTR_2026_05344",
+        "diasAtraso": 3650,
+        "valorInadimplente": 10829.9,
+        "nivelRisco": "Alto"
+      },
+      {
+        "idContrato": "CONTR_2026_02332",
+        "diasAtraso": 3650,
+        "valorInadimplente": 10248.27,
+        "nivelRisco": "Alto"
+      }
+    ],
+    "concentracaoRiscoAlto": 89.2,
+    "regiaoMaiorRisco": "Norte"
+  },
+  "relatorioGerencial": {
+    "indicadores": [
+      {
+        "titulo": "Valor total em risco",
+        "valor": 62308840.8
+      },
+      {
+        "titulo": "Valor recuperado",
+        "valor": 55440309.28
+      },
+      {
+        "titulo": "Efetividade de recuperacao",
+        "valor": 73.51,
+        "sufixo": "%"
+      },
+      {
+        "titulo": "Contratos criticos",
+        "valor": 8925
+      }
+    ],
+    "resumo": "A carteira analisada reune 10.000 contratos e R$ 62.308.841 em valor inadimplente, com atraso medio de 99.88 dias."
+  },
+  "resumoCarga": {
+    "contratos": 10000,
+    "pagamentos": 100000,
+    "maxParcela": 60,
+    "arquivos": {
+      "cobranca": "C:\\Users\\caiob\\OneDrive\\Desktop\\orion\\backend\\data\\cobranca_assessorias.csv",
+      "pagamentos": "C:\\Users\\caiob\\OneDrive\\Desktop\\orion\\backend\\data\\fluxo_pagamentos.xlsx"
+    },
+    "origem": "Python + Pandas"
+  }
+}

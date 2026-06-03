@@ -133,6 +133,47 @@ export async function getAnalytics() {
   return payload;
 }
 
+export async function getContratoAnalitico(idContrato: string) {
+  await getDataFilesKey();
+
+  const normalizedId = normalizeId(idContrato);
+  const pagamentos = readPagamentos()
+    .filter((row) => normalizeId(row.ID_Contrato) === normalizedId)
+    .map(cleanPagamento)
+    .filter((pagamento): pagamento is PagamentoAnalitico => Boolean(pagamento));
+  const latestPaymentByContract = getLatestPaymentByContract(pagamentos);
+  const rawCobrancas = await readCobrancas();
+  const rawContrato = rawCobrancas.find((row) => normalizeId(row.ID_Contrato) === normalizedId);
+
+  if (!rawContrato) {
+    return null;
+  }
+
+  return cleanContrato(rawContrato, latestPaymentByContract.get(normalizedId));
+}
+
+export async function getHistoricoFinanceiro(idContrato: string) {
+  await getDataFilesKey();
+
+  const normalizedId = normalizeId(idContrato);
+  const pagamentos = readPagamentos()
+    .filter((row) => normalizeId(row.ID_Contrato) === normalizedId)
+    .map(cleanPagamento)
+    .filter((pagamento): pagamento is PagamentoAnalitico => Boolean(pagamento))
+    .sort((a, b) => a.parcela - b.parcela || compareNullableDates(a.vencimento, b.vencimento));
+
+  return pagamentos.map((item) => ({
+    parcela: item.parcela,
+    vencimento: item.vencimento,
+    pagamento: item.pagamento,
+    valorParcela: item.valorParcela,
+    valorPago: item.valorPago,
+    formaPagamento: item.formaPagamento,
+    indicadorContemplacao: item.indicadorContemplacao,
+    situacao: getPaymentSituation(item)
+  }));
+}
+
 async function getAnalyticsKey() {
   const generatedKey = await getGeneratedAnalyticsKey();
 
@@ -286,6 +327,7 @@ function buildAnalytics(contratos: ContratoAnalitico[], pagamentos: PagamentoAna
   const valorTotalInadimplente = sumBy(contratos, (item) => item.valorInadimplente);
   const totalValorPago = sumBy(pagamentos, (item) => item.valorPago);
   const totalValorParcela = sumBy(pagamentos, (item) => item.valorParcela);
+  const maxParcela = Math.max(0, ...pagamentos.map((item) => item.parcela));
   const cobrancaStatus = countToArray(contratos, (item) => item.statusCobranca, "status", "quantidade");
   const statusCounts = Object.fromEntries(cobrancaStatus.map((item) => [item.status, item.quantidade]));
   const regioes = buildRegioes(contratos);
@@ -346,6 +388,12 @@ function buildAnalytics(contratos: ContratoAnalitico[], pagamentos: PagamentoAna
     alertas,
     contratosPorId,
     historicosFinanceiros,
+    pagamentosResumo: {
+      totalRegistrados: pagamentos.length,
+      maiorNumeroParcela: maxParcela,
+      totalValorPago: round(totalValorPago),
+      totalValorParcela: round(totalValorParcela)
+    },
     relatorioGerencial: {
       indicadores: [
         { titulo: "Valor total em risco", valor: kpis.valorTotalInadimplente },
@@ -360,6 +408,7 @@ function buildAnalytics(contratos: ContratoAnalitico[], pagamentos: PagamentoAna
     resumoCarga: {
       contratos: contratos.length,
       pagamentos: pagamentos.length,
+      maxParcela,
       arquivos: {
         cobranca: cobrancaPath,
         pagamentos: pagamentosPath

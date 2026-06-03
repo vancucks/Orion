@@ -1,0 +1,175 @@
+{
+  "inadimplencia": 100.0,
+  "recuperacao": 73.51,
+  "atrasoMedio": 99.88,
+  "riscoRegional": [
+    {
+      "regiao": "Nordeste",
+      "contratos": 3691,
+      "valorInadimplente": 22748368.22,
+      "exposicaoFinanceira": 22748368.22,
+      "riscoAlto": 3310,
+      "percentualRiscoAlto": 89.7
+    },
+    {
+      "regiao": "Sudeste",
+      "contratos": 3529,
+      "valorInadimplente": 21556882.87,
+      "exposicaoFinanceira": 21556882.87,
+      "riscoAlto": 3137,
+      "percentualRiscoAlto": 88.9
+    },
+    {
+      "regiao": "Sul",
+      "contratos": 1517,
+      "valorInadimplente": 9828722.06,
+      "exposicaoFinanceira": 9828722.06,
+      "riscoAlto": 1356,
+      "percentualRiscoAlto": 89.4
+    },
+    {
+      "regiao": "Centro-Oeste",
+      "contratos": 779,
+      "valorInadimplente": 5026348.66,
+      "exposicaoFinanceira": 5026348.66,
+      "riscoAlto": 686,
+      "percentualRiscoAlto": 88.1
+    },
+    {
+      "regiao": "Norte",
+      "contratos": 484,
+      "valorInadimplente": 3148518.99,
+      "exposicaoFinanceira": 3148518.99,
+      "riscoAlto": 436,
+      "percentualRiscoAlto": 90.1
+    }
+  ],
+  "tendenciaTemporal": {
+    "direcao": "queda",
+    "variacaoPercentual": -79.1,
+    "mesAtual": "Jul/26",
+    "mesAnterior": "Jun/26"
+  },
+  "valorTotalInadimplente": 62308840.8,
+  "contratosEmAberto": 4014,
+  "quantidadeContratosPorStatus": [
+    {
+      "status": "Em Aberto",
+      "quantidade": 4014
+    },
+    {
+      "status": "Acordo Firmado",
+      "quantidade": 3407
+    },
+    {
+      "status": "Insucesso",
+      "quantidade": 1549
+    },
+    {
+      "status": "Ajuizado",
+      "quantidade": 1030
+    }
+  ],
+  "scoreMedioRisco": 49.24,
+  "contratosPorNivelRisco": [
+    {
+      "nivel": "Alto",
+      "quantidade": 8925
+    },
+    {
+      "nivel": "Médio",
+      "quantidade": 1021
+    },
+    {
+      "nivel": "Baixo",
+      "quantidade": 54
+    }
+  ],
+  "formaPagamentoMaisUtilizada": "Boleto",
+  "pagamentosPorMes": [
+    {
+      "mes": "Ago/25",
+      "pagamentos": 5082,
+      "recuperado": 3898928.33
+    },
+    {
+      "mes": "Set/25",
+      "pagamentos": 4900,
+      "recuperado": 3731637.93
+    },
+    {
+      "mes": "Out/25",
+      "pagamentos": 5024,
+      "recuperado": 3830149.11
+    },
+    {
+      "mes": "Nov/25",
+      "pagamentos": 4805,
+      "recuperado": 3683200.5
+    },
+    {
+      "mes": "Dez/25",
+      "pagamentos": 4984,
+      "recuperado": 3741015.26
+    },
+    {
+      "mes": "Jan/26",
+      "pagamentos": 4964,
+      "recuperado": 3778257.73
+    },
+    {
+      "mes": "Fev/26",
+      "pagamentos": 4520,
+      "recuperado": 3495120.99
+    },
+    {
+      "mes": "Mar/26",
+      "pagamentos": 4176,
+      "recuperado": 3220804.74
+    },
+    {
+      "mes": "Abr/26",
+      "pagamentos": 1197,
+      "recuperado": 902456.48
+    },
+    {
+      "mes": "Mai/26",
+      "pagamentos": 520,
+      "recuperado": 403285.71
+    },
+    {
+      "mes": "Jun/26",
+      "pagamentos": 265,
+      "recuperado": 207720.22
+    },
+    {
+      "mes": "Jul/26",
+      "pagamentos": 53,
+      "recuperado": 43391.44
+    }
+  ],
+  "valorInadimplentePorRegiao": [
+    {
+      "regiao": "Nordeste",
+      "valorInadimplente": 22748368.22
+    },
+    {
+      "regiao": "Sudeste",
+      "valorInadimplente": 21556882.87
+    },
+    {
+      "regiao": "Sul",
+      "valorInadimplente": 9828722.06
+    },
+    {
+      "regiao": "Centro-Oeste",
+      "valorInadimplente": 5026348.66
+    },
+    {
+      "regiao": "Norte",
+      "valorInadimplente": 3148518.99
+    }
+  ],
+  "taxaRecuperacao": 73.51,
+  "contratosInadimplentes": 10000
+}

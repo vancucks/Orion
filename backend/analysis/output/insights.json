@@ -1,0 +1,64 @@
+{
+  "diretoria": [
+    "A carteira analisada reune 10.000 contratos e R$ 62.308.841 em valor inadimplente, com atraso medio de 99.88 dias.",
+    "A recuperacao esta em 73.51%, com tendencia temporal de queda entre Jun/26 e Jul/26.",
+    "Nordeste lidera a exposicao financeira e deve ser acompanhada na rotina executiva."
+  ],
+  "financeiro": [
+    "A forma de pagamento predominante e Boleto, relevante para projecoes de caixa e acordos.",
+    "Contratos em aberto somam 4.014 casos e indicam potencial de priorizacao financeira.",
+    "Os contratos prioritarios combinam atraso, valor inadimplente e score de risco para orientar negociacao."
+  ],
+  "operacaoCobranca": [
+    "Em Aberto e o status de cobranca predominante e deve orientar cadencia operacional.",
+    "A concentracao de risco alto esta em 89.2% dos contratos.",
+    "Norte apresenta maior concentracao regional de risco alto e merece fila especifica."
+  ],
+  "padroes": {
+    "regioesMaiorInadimplencia": [
+      "Nordeste",
+      "Sudeste",
+      "Sul"
+    ],
+    "regiaoMaiorInadimplencia": "Nordeste",
+    "statusMaisFrequente": "Em Aberto",
+    "maiorConcentracaoRisco": "Norte",
+    "formaPagamentoPredominante": "Boleto",
+    "comportamentoTemporalPagamentos": "queda de -79.1% entre Jun/26 e Jul/26",
+    "contratosComMaiorAtraso": [
+      {
+        "idContrato": "CONTR_2026_00442",
+        "diasAtraso": 3650,
+        "valorInadimplente": 21003.52,
+        "nivelRisco": "Alto"
+      },
+      {
+        "idContrato": "CONTR_2026_07961",
+        "diasAtraso": 3650,
+        "valorInadimplente": 16051.56,
+        "nivelRisco": "Alto"
+      },
+      {
+        "idContrato": "CONTR_2026_06298",
+        "diasAtraso": 3650,
+        "valorInadimplente": 12808.62,
+        "nivelRisco": "Alto"
+      },
+      {
+        "idContrato": "CONTR_2026_05344",
+        "diasAtraso": 3650,
+        "valorInadimplente": 10829.9,
+        "nivelRisco": "Alto"
+      },
+      {
+        "idContrato": "CONTR_2026_02332",
+        "diasAtraso": 3650,
+        "valorInadimplente": 10248.27,
+        "nivelRisco": "Alto"
+      }
+    ],
+    "concentracaoRiscoAlto": 89.2,
+    "regiaoMaiorRisco": "Norte"
+  },
+  "geradoEm": "2026-06-03T21:45:20.096130+00:00"
+}

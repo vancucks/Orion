@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import { DataFileNotFoundError, getAnalytics } from "../services/analyticsService.js";
+import { DataFileNotFoundError, getAnalytics, getContratoAnalitico, getHistoricoFinanceiro } from "../services/analyticsService.js";
 
 type Analytics = Awaited<ReturnType<typeof getAnalytics>>;
 
@@ -36,10 +36,10 @@ export const getDashboardRisco = async (_req: Request, res: Response) => {
 
 export const getDashboardPagamentos = async (_req: Request, res: Response) => {
   await sendAnalytics(res, (analytics) => ({
-    pagamentosRegistrados: analytics.pagamentos.length,
+    pagamentosRegistrados: analytics.pagamentosResumo.totalRegistrados,
     formaMaisUtilizada: analytics.patterns.formaPagamentoPredominante,
     contratosEmAcordo: getStatusCount(analytics, "Acordo Firmado"),
-    parcelasMonitoradas: `${getMaxParcela(analytics)} parcela(s)`,
+    parcelasMonitoradas: `${analytics.pagamentosResumo.maiorNumeroParcela} parcela(s)`,
     formasPagamento: analytics.formasPagamento,
     evolucaoPagamentos: analytics.evolucaoPagamentos,
     resumo: analytics.insights.financeiro[0],
@@ -81,29 +81,33 @@ export const getAlertas = async (_req: Request, res: Response) => {
 };
 
 export const getContrato = async (req: Request, res: Response) => {
-  await sendAnalytics(res, (analytics) => {
-    const contrato = analytics.contratosPorId[req.params.id];
+  try {
+    const contrato = await getContratoAnalitico(req.params.id);
 
     if (!contrato) {
-      res.status(404);
-      return { message: "Contrato não encontrado" };
+      res.status(404).json({ message: "Contrato nao encontrado" });
+      return;
     }
 
-    return contrato;
-  });
+    res.json(contrato);
+  } catch (error) {
+    handleAnalyticsError(error, res);
+  }
 };
 
 export const getHistoricoContrato = async (req: Request, res: Response) => {
-  await sendAnalytics(res, (analytics) => {
-    const historico = analytics.historicosFinanceiros[req.params.id];
+  try {
+    const historico = await getHistoricoFinanceiro(req.params.id);
 
-    if (!historico) {
-      res.status(404);
-      return { message: "Histórico financeiro não encontrado" };
+    if (historico.length === 0) {
+      res.status(404).json({ message: "Historico financeiro nao encontrado" });
+      return;
     }
 
-    return historico;
-  });
+    res.json(historico);
+  } catch (error) {
+    handleAnalyticsError(error, res);
+  }
 };
 
 export const getInsights = async (_req: Request, res: Response) => {
@@ -148,8 +152,4 @@ function handleAnalyticsError(error: unknown, res: Response) {
 
 function getStatusCount(analytics: Analytics, status: string) {
   return analytics.cobrancaStatus.find((item) => item.status === status)?.quantidade ?? 0;
-}
-
-function getMaxParcela(analytics: Analytics) {
-  return Math.max(0, ...analytics.pagamentos.map((item) => item.parcela));
 }

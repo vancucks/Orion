@@ -196,8 +196,6 @@ def build_analytics(
     df_merged: pd.DataFrame,
     exploratoria: dict[str, Any],
 ) -> dict[str, Any]:
-    contratos = build_contratos(df_merged)
-    pagamentos = build_pagamentos(df_pagamentos)
     cobranca_status = count_records(df_cobranca["Status_Cobranca"], "status", "quantidade")
     status_counts = {item["status"]: item["quantidade"] for item in cobranca_status}
     regioes = build_regioes(df_cobranca)
@@ -205,15 +203,14 @@ def build_analytics(
     evolucao_pagamentos = build_evolucao_pagamentos(df_pagamentos)
     distribuicao_risco = build_distribuicao_risco(df_cobranca)
     assessorias = build_assessorias(df_cobranca)
-    clientes_prioritarios = build_clientes_prioritarios(contratos)
+    clientes_prioritarios = build_clientes_prioritarios(df_merged, limit=50)
     alertas = build_alertas(clientes_prioritarios)
-    contratos_por_id = {item["idContrato"]: item for item in contratos}
-    historicos_financeiros = build_historicos(df_pagamentos)
     patterns = build_patterns(regioes, cobranca_status, formas_pagamento, distribuicao_risco, clientes_prioritarios, evolucao_pagamentos)
 
     total_valor_inadimplente = float(df_cobranca["Valor_Inadimplente_Inicial"].sum())
     total_valor_pago = float(df_pagamentos["Valor_Pago"].sum()) if not df_pagamentos.empty else 0.0
     total_valor_parcela = float(df_pagamentos["Valor_Parcela"].sum()) if not df_pagamentos.empty else 0.0
+    max_parcela = int(df_pagamentos["Numero_Parcela"].max()) if not df_pagamentos.empty else 0
     contratos_inadimplentes = int(df_cobranca["Indicador_Inadimplente"].sum())
     total_contratos = int(len(df_cobranca))
     taxa_recuperacao = (total_valor_pago / total_valor_parcela * 100) if total_valor_parcela > 0 else 0
@@ -234,8 +231,6 @@ def build_analytics(
         "contratosPorNivelRisco": [{"nivel": item["nivel"], "quantidade": item["quantidade"]} for item in risk_count_records(df_cobranca)],
         "formaPagamentoMaisUtilizada": patterns["formaPagamentoPredominante"],
         "pagamentosPorMes": evolucao_pagamentos,
-        "contratosPrioritarios": clientes_prioritarios,
-        "contratosComMaiorAtraso": patterns["contratosComMaiorAtraso"],
         "valorInadimplentePorRegiao": [{"regiao": item["regiao"], "valorInadimplente": item["valorInadimplente"]} for item in regioes],
         "taxaRecuperacao": round_number(taxa_recuperacao),
         "contratosInadimplentes": total_contratos,
@@ -244,8 +239,6 @@ def build_analytics(
     insights = build_insights(kpis, patterns)
 
     dashboards = {
-        "contratos": contratos,
-        "pagamentos": pagamentos,
         "cobrancaStatus": cobranca_status,
         "distribuicaoRisco": distribuicao_risco,
         "formasPagamento": formas_pagamento,
@@ -254,8 +247,12 @@ def build_analytics(
         "assessorias": assessorias,
         "clientesPrioritarios": clientes_prioritarios,
         "alertas": alertas,
-        "contratosPorId": contratos_por_id,
-        "historicosFinanceiros": historicos_financeiros,
+        "pagamentosResumo": {
+            "totalRegistrados": int(len(df_pagamentos)),
+            "maiorNumeroParcela": max_parcela,
+            "totalValorPago": round_number(total_valor_pago),
+            "totalValorParcela": round_number(total_valor_parcela),
+        },
         "patterns": patterns,
         "relatorioGerencial": {
             "indicadores": [
@@ -269,6 +266,7 @@ def build_analytics(
         "resumoCarga": {
             "contratos": total_contratos,
             "pagamentos": int(len(df_pagamentos)),
+            "maxParcela": max_parcela,
             "arquivos": {"cobranca": str(COBRANCA_PATH), "pagamentos": str(PAGAMENTOS_PATH)},
             "origem": "Python + Pandas",
         },
@@ -424,17 +422,19 @@ def build_assessorias(df: pd.DataFrame) -> list[dict[str, Any]]:
     return [{"nome": row["Nome_Assessoria"], "contratos": int(row["contratos"]), "emAberto": int(row["emAberto"])} for _, row in grouped.iterrows()]
 
 
-def build_clientes_prioritarios(contratos: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    return sorted(
-        [item for item in contratos if item["nivelRisco"] == "Alto" or item["valorInadimplente"] > 0],
-        key=lambda item: (
-            risk_weight(item["nivelRisco"]),
-            item["diasAtraso"],
-            item["valorInadimplente"],
-            item["scoreRisco"],
-        ),
-        reverse=True,
-    )[:20]
+def build_clientes_prioritarios(df: pd.DataFrame, limit: int = 50) -> list[dict[str, Any]]:
+    priority_df = df[(df["Nivel_Risco"] == "Alto") | (df["Valor_Inadimplente_Inicial"] > 0)].copy()
+
+    if priority_df.empty:
+        return []
+
+    priority_df["_Peso_Risco"] = priority_df["Nivel_Risco"].map(risk_weight).fillna(0)
+    priority_df = priority_df.sort_values(
+        ["_Peso_Risco", "Dias_Em_Atraso_Inicial", "Valor_Inadimplente_Inicial", "Score_Interno_Risco"],
+        ascending=[False, False, False, False],
+    ).head(limit)
+
+    return build_contratos(priority_df)
 
 
 def build_alertas(clientes_prioritarios: list[dict[str, Any]]) -> list[dict[str, Any]]:
