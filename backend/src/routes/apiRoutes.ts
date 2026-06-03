@@ -9,6 +9,7 @@ import {
   getDashboardRegional,
   getDashboardRisco,
   getHistoricoContrato,
+  getInsights,
   getKpis,
   getRelatorios
 } from "../controllers/dashboardController.js";
@@ -25,6 +26,7 @@ router.get("/clientes-prioritarios", getClientesPrioritarios);
 router.get("/alertas", getAlertas);
 router.get("/contratos/:id", getContrato);
 router.get("/contratos/:id/historico", getHistoricoContrato);
+router.get("/insights", getInsights);
 router.get("/relatorios", getRelatorios);
 
 export default router;

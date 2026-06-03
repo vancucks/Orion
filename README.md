@@ -6,18 +6,45 @@ Protótipo funcional de uma plataforma web de inteligência financeira para recu
 
 - Frontend: React, TypeScript, Tailwind CSS, Vite e Recharts
 - Backend: Node.js, Express e TypeScript
-- Dados: mocks em arrays TypeScript
+- Dados: arquivos reais em CSV e XLSX
 - Banco de dados: não utilizado
 - Autenticação: apenas visual/simulada
 
-## Estrutura
+## Dados reais
+
+O backend lê os arquivos diretamente do diretório `backend/data`, sem Prisma, MySQL, PostgreSQL ou outro banco de dados.
+
+Coloque os arquivos nestes caminhos:
 
 ```txt
-orion/
-  frontend/
-  backend/
-  README.md
+backend/data/cobranca_assessorias.csv
+backend/data/fluxo_pagamentos.xlsx
 ```
+
+Colunas esperadas em `cobranca_assessorias.csv`:
+
+- `ID_Contrato`
+- `Nome_Assessoria`
+- `Data_Envio_Assessoria`
+- `Dias_Em_Atraso_Inicial`
+- `Valor_Inadimplente_Inicial`
+- `Status_Cobranca`
+- `Score_Interno_Risco`
+- `Regiao_Cliente`
+
+Colunas esperadas em `fluxo_pagamentos.xlsx`:
+
+- `ID_Pagamento`
+- `ID_Contrato`
+- `Numero_Parcela`
+- `Data_Vencimento`
+- `Data_Pagamento`
+- `Valor_Parcela`
+- `Valor_Pago`
+- `Forma_Pagamento`
+- `Indicador_Contemplado`
+
+Se algum arquivo estiver ausente, a API retorna erro `DATA_FILES_NOT_FOUND` informando o que precisa ser colocado em `backend/data`.
 
 ## Como instalar
 
@@ -65,26 +92,20 @@ npm run build
 - `GET /api/alertas`
 - `GET /api/contratos/:id`
 - `GET /api/contratos/:id/historico`
+- `GET /api/insights`
 - `GET /api/relatorios`
+
+## Processamento dos dados
+
+Ao carregar os arquivos, o backend:
+
+- converte valores monetários para número;
+- padroniza datas para `YYYY-MM-DD`;
+- trata nulos e registros sem identificador;
+- normaliza regiões, assessorias, status de cobrança e formas de pagamento;
+- classifica risco em baixo, médio e alto;
+- calcula KPIs, análise regional, evolução mensal de pagamentos, clientes prioritários, alertas e insights textuais.
 
 ## Acesso
 
 A tela de login é simulada. Ao clicar em **Entrar**, o usuário é direcionado ao Dashboard Executivo.
-
-## Telas incluídas
-
-- Login
-- Dashboard Executivo
-- Dashboard Analítico de Risco
-- Dashboard de Pagamentos
-- Dashboard Regional
-- Dashboard Operacional de Contratos
-- Clientes Prioritários
-- Alertas
-- Consulta de Contrato
-- Histórico Financeiro
-- Relatório Gerencial
-
-## Observações
-
-O sistema foi organizado para facilitar uma futura conexão com banco de dados real, mantendo controllers, rotas, serviços, tipos e componentes reutilizáveis separados.

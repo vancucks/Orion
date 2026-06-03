@@ -6,7 +6,7 @@ import { HistoricoFinanceiro as HistoricoFinanceiroType } from "../types";
 import { useApi } from "../services/useApi";
 
 export function HistoricoFinanceiro() {
-  const contrato = "OR-1001";
+  const contrato = "CONTR_2026_00001";
   const { data, loading, error } = useApi<HistoricoFinanceiroType[]>(`/api/contratos/${contrato}/historico`);
 
   if (loading) return <LoadingState />;

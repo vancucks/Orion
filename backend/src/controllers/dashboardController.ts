@@ -1,102 +1,148 @@
-import { Request, Response } from "express";
-import {
-  alertas,
-  assessorias,
-  clientesPrioritarios,
-  cobrancaStatus,
-  contratos,
-  distribuicaoRisco,
-  evolucaoPagamentos,
-  formasPagamento,
-  historicosFinanceiros,
-  kpis,
-  regioes,
-  relatorioGerencial
-} from "../data/mockData.js";
+import type { Request, Response } from "express";
+import { DataFileNotFoundError, getAnalytics } from "../services/analyticsService.js";
 
-export const getKpis = (_req: Request, res: Response) => res.json(kpis);
+type Analytics = Awaited<ReturnType<typeof getAnalytics>>;
 
-export const getDashboardExecutivo = (_req: Request, res: Response) => {
-  res.json({
-    kpis,
-    regioes,
-    statusCobranca: cobrancaStatus,
-    resumo: "A carteira inadimplente soma R$ 62,3 milhões, com maior concentração regional no Nordeste e recuperação média de 34,07%. A prioridade operacional deve permanecer nos contratos de maior atraso e exposição financeira."
+export const getKpis = async (_req: Request, res: Response) => {
+  await sendAnalytics(res, (analytics) => analytics.kpis);
+};
+
+export const getDashboardExecutivo = async (_req: Request, res: Response) => {
+  await sendAnalytics(res, (analytics) => ({
+    kpis: analytics.kpis,
+    regioes: analytics.regioes,
+    statusCobranca: analytics.cobrancaStatus,
+    resumo: analytics.insights.diretoria[0],
+    insights: analytics.insights.diretoria
+  }));
+};
+
+export const getDashboardRisco = async (_req: Request, res: Response) => {
+  await sendAnalytics(res, (analytics) => ({
+    scoreMedioRisco: analytics.kpis.scoreMedioRisco,
+    contratosAjuizados: getStatusCount(analytics, "Ajuizado"),
+    contratosComAcordo: getStatusCount(analytics, "Acordo Firmado"),
+    contratosComInsucesso: getStatusCount(analytics, "Insucesso"),
+    distribuicaoRisco: analytics.distribuicaoRisco,
+    regioes: analytics.regioes,
+    riscoRegional: analytics.regioes.map((item) => ({
+      regiao: item.regiao,
+      percentualRiscoAlto: item.percentualRiscoAlto,
+      riscoAlto: item.riscoAlto
+    })),
+    leituras: analytics.insights.operacaoCobranca
+  }));
+};
+
+export const getDashboardPagamentos = async (_req: Request, res: Response) => {
+  await sendAnalytics(res, (analytics) => ({
+    pagamentosRegistrados: analytics.pagamentos.length,
+    formaMaisUtilizada: analytics.patterns.formaPagamentoPredominante,
+    contratosEmAcordo: getStatusCount(analytics, "Acordo Firmado"),
+    parcelasMonitoradas: `${getMaxParcela(analytics)} parcela(s)`,
+    formasPagamento: analytics.formasPagamento,
+    evolucaoPagamentos: analytics.evolucaoPagamentos,
+    resumo: analytics.insights.financeiro[0],
+    insights: analytics.insights.financeiro
+  }));
+};
+
+export const getDashboardRegional = async (_req: Request, res: Response) => {
+  await sendAnalytics(res, (analytics) => {
+    const regiaoMaisContratos = [...analytics.regioes].sort((a, b) => b.contratos - a.contratos)[0];
+    const regiaoMaiorValor = [...analytics.regioes].sort((a, b) => b.valorInadimplente - a.valorInadimplente)[0];
+
+    return {
+      regiaoMaisContratos: regiaoMaisContratos ? `${regiaoMaisContratos.regiao} (${regiaoMaisContratos.contratos})` : "Sem dados",
+      regiaoMaiorValor: regiaoMaiorValor?.regiao ?? "Sem dados",
+      maiorExposicaoFinanceira: regiaoMaiorValor?.exposicaoFinanceira ?? 0,
+      regioesMonitoradas: analytics.regioes.length,
+      regioes: analytics.regioes,
+      leitura: analytics.insights.diretoria[2]
+    };
   });
 };
 
-export const getDashboardRisco = (_req: Request, res: Response) => {
-  res.json({
-    scoreMedioRisco: kpis.scoreMedioRisco,
-    contratosAjuizados: 1030,
-    contratosComAcordo: 3407,
-    contratosComInsucesso: 1549,
-    distribuicaoRisco,
-    regioes,
-    leituras: [
-      "89,1% da base monitorada está classificada em risco alto.",
-      "Contratos ajuizados e casos com insucesso devem receber priorização analítica.",
-      "Nordeste e Sudeste concentram a maior exposição financeira."
-    ]
+export const getDashboardContratos = async (_req: Request, res: Response) => {
+  await sendAnalytics(res, (analytics) => ({
+    statusCobranca: analytics.cobrancaStatus,
+    topAssessoriasContratos: analytics.assessorias,
+    topAssessoriasEmAberto: [...analytics.assessorias].sort((a, b) => b.emAberto - a.emAberto),
+    contratosPrioritarios: analytics.clientesPrioritarios
+  }));
+};
+
+export const getClientesPrioritarios = async (_req: Request, res: Response) => {
+  await sendAnalytics(res, (analytics) => analytics.clientesPrioritarios);
+};
+
+export const getAlertas = async (_req: Request, res: Response) => {
+  await sendAnalytics(res, (analytics) => analytics.alertas);
+};
+
+export const getContrato = async (req: Request, res: Response) => {
+  await sendAnalytics(res, (analytics) => {
+    const contrato = analytics.contratosPorId[req.params.id];
+
+    if (!contrato) {
+      res.status(404);
+      return { message: "Contrato não encontrado" };
+    }
+
+    return contrato;
   });
 };
 
-export const getDashboardPagamentos = (_req: Request, res: Response) => {
-  res.json({
-    pagamentosRegistrados: 100000,
-    formaMaisUtilizada: "Boleto",
-    contratosEmAcordo: 3407,
-    parcelasMonitoradas: "60 parcela(s)",
-    formasPagamento,
-    evolucaoPagamentos,
-    resumo: "O boleto segue como principal forma de pagamento, seguido por Pix. A evolução mensal indica crescimento gradual do volume registrado e do valor recuperado."
+export const getHistoricoContrato = async (req: Request, res: Response) => {
+  await sendAnalytics(res, (analytics) => {
+    const historico = analytics.historicosFinanceiros[req.params.id];
+
+    if (!historico) {
+      res.status(404);
+      return { message: "Histórico financeiro não encontrado" };
+    }
+
+    return historico;
   });
 };
 
-export const getDashboardRegional = (_req: Request, res: Response) => {
-  res.json({
-    regiaoMaisContratos: "Nordeste (3.604)",
-    regiaoMaiorValor: "Nordeste",
-    maiorExposicaoFinanceira: 22189407.46,
-    regioesMonitoradas: 7,
-    regioes,
-    leitura: "O Nordeste lidera em quantidade de contratos e exposição financeira. Nordeste e Sudeste devem ser acompanhados como regiões críticas para recuperação de crédito."
-  });
+export const getInsights = async (_req: Request, res: Response) => {
+  await sendAnalytics(res, (analytics) => analytics.insights);
 };
 
-export const getDashboardContratos = (_req: Request, res: Response) => {
-  res.json({
-    statusCobranca: cobrancaStatus,
-    topAssessoriasContratos: assessorias,
-    topAssessoriasEmAberto: [...assessorias].sort((a, b) => b.emAberto - a.emAberto),
-    contratosPrioritarios: clientesPrioritarios
-  });
+export const getRelatorios = async (_req: Request, res: Response) => {
+  await sendAnalytics(res, (analytics) => analytics.relatorioGerencial);
 };
 
-export const getClientesPrioritarios = (_req: Request, res: Response) => res.json(clientesPrioritarios);
+async function sendAnalytics<T>(res: Response, select: (analytics: Analytics) => T) {
+  try {
+    const analytics = await getAnalytics();
+    res.json(select(analytics));
+  } catch (error) {
+    handleAnalyticsError(error, res);
+  }
+}
 
-export const getAlertas = (_req: Request, res: Response) => res.json(alertas);
-
-export const getContrato = (req: Request, res: Response) => {
-  const contrato = contratos[req.params.id];
-
-  if (!contrato) {
-    res.status(404).json({ message: "Contrato não encontrado" });
+function handleAnalyticsError(error: unknown, res: Response) {
+  if (error instanceof DataFileNotFoundError) {
+    res.status(500).json({
+      message: error.message,
+      code: error.code
+    });
     return;
   }
 
-  res.json(contrato);
-};
+  console.error("Erro ao processar dados reais do ORION Analytics:", error);
+  res.status(500).json({
+    message: "Falha ao processar os arquivos reais do ORION Analytics.",
+    code: "DATA_PROCESSING_ERROR"
+  });
+}
 
-export const getHistoricoContrato = (req: Request, res: Response) => {
-  const historico = historicosFinanceiros[req.params.id];
+function getStatusCount(analytics: Analytics, status: string) {
+  return analytics.cobrancaStatus.find((item) => item.status === status)?.quantidade ?? 0;
+}
 
-  if (!historico) {
-    res.status(404).json({ message: "Histórico financeiro não encontrado" });
-    return;
-  }
-
-  res.json(historico);
-};
-
-export const getRelatorios = (_req: Request, res: Response) => res.json(relatorioGerencial);
+function getMaxParcela(analytics: Analytics) {
+  return Math.max(0, ...analytics.pagamentos.map((item) => item.parcela));
+}

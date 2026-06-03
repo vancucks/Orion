@@ -10,8 +10,8 @@ import { ClientePrioritario } from "../types";
 import { useApi } from "../services/useApi";
 
 export function ConsultaContrato() {
-  const [inputId, setInputId] = useState("OR-1001");
-  const [contractId, setContractId] = useState("OR-1001");
+  const [inputId, setInputId] = useState("CONTR_2026_00001");
+  const [contractId, setContractId] = useState("CONTR_2026_00001");
   const { data, loading, error } = useApi<ClientePrioritario>(`/api/contratos/${contractId}`);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
