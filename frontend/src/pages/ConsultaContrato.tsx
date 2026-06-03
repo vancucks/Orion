@@ -1,18 +1,21 @@
 import { FormEvent, useState } from "react";
 import type { ReactNode } from "react";
 import { Search } from "lucide-react";
+import { EmptyState } from "../components/EmptyState";
 import { ErrorState } from "../components/ErrorState";
 import { FilterBar } from "../components/FilterBar";
 import { LoadingState } from "../components/LoadingState";
 import { RiskBadge } from "../components/RiskBadge";
 import { currency, number } from "../components/Formatters";
 import { ClientePrioritario } from "../types";
+import { useFilteredPath } from "../contexts/FilterContext";
 import { useApi } from "../services/useApi";
 
 export function ConsultaContrato() {
   const [inputId, setInputId] = useState("CONTR_2026_00001");
   const [contractId, setContractId] = useState("CONTR_2026_00001");
-  const { data, loading, error } = useApi<ClientePrioritario>(`/api/contratos/${contractId}`);
+  const path = useFilteredPath(`/api/contratos/${contractId}`);
+  const { data, loading, error } = useApi<ClientePrioritario>(path);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -21,7 +24,7 @@ export function ConsultaContrato() {
 
   return (
     <div className="space-y-6">
-      <FilterBar filters={["regioes", "statusCobranca", "niveisRisco", "formasPagamento", "assessorias"]} />
+      <FilterBar filters={["regioes", "periodos", "statusCobranca", "niveisRisco", "formasPagamento", "assessorias"]} />
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-3 rounded-lg border border-orion-border bg-white p-4 shadow-soft sm:flex-row">
         <label className="flex-1 text-sm font-semibold text-slate-600">
@@ -39,7 +42,7 @@ export function ConsultaContrato() {
       </form>
 
       {loading ? <LoadingState /> : null}
-      {!loading && error ? <ErrorState message={error} /> : null}
+      {!loading && error ? (error.toLowerCase().includes("contrato") ? <EmptyState /> : <ErrorState message={error} />) : null}
       {!loading && data ? (
         <section className="rounded-lg border border-orion-border bg-white p-5 shadow-soft">
           <h2 className="text-base font-semibold text-orion-text">Detalhes do contrato</h2>

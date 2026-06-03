@@ -56,6 +56,16 @@ export type PagamentoAnalitico = {
   indicadorContemplacao: string;
 };
 
+export type AnalyticsFilters = {
+  regiao?: string;
+  dataInicio?: string;
+  dataFim?: string;
+  status?: string;
+  risco?: string;
+  formaPagamento?: string;
+  assessoria?: string;
+};
+
 type PreviewRecord = Record<string, unknown>;
 
 type ValidationData = {
@@ -72,6 +82,14 @@ type AnalyticsPayload = ReturnType<typeof buildAnalytics> & {
 type CacheEntry = {
   key: string;
   payload: AnalyticsPayload;
+};
+
+type SourceDataCache = {
+  key: string;
+  contratos: ContratoAnalitico[];
+  pagamentos: PagamentoAnalitico[];
+  rawCobrancas: RawCobranca[];
+  rawPagamentos: RawPagamento[];
 };
 
 export class DataFileNotFoundError extends Error {
@@ -96,36 +114,33 @@ const analysisOutputPaths = {
 };
 
 let cache: CacheEntry | null = null;
+let sourceCache: SourceDataCache | null = null;
 
-export async function getAnalytics() {
-  const key = await getAnalyticsKey();
+export async function getAnalytics(filters: AnalyticsFilters = {}) {
+  const activeFilters = normalizeFilters(filters);
+  const key = await getAnalyticsKey(activeFilters);
 
   if (cache?.key === key) {
     return cache.payload;
   }
 
-  const generatedAnalytics = await readGeneratedAnalytics();
+  const generatedAnalytics = hasActiveFilters(activeFilters) ? null : await readGeneratedAnalytics();
 
   if (generatedAnalytics) {
     cache = { key, payload: generatedAnalytics };
     return generatedAnalytics;
   }
 
-  const rawCobrancas = await readCobrancas();
-  const rawPagamentos = readPagamentos();
-  const pagamentos = rawPagamentos.map(cleanPagamento).filter((pagamento): pagamento is PagamentoAnalitico => Boolean(pagamento));
-  const latestPaymentByContract = getLatestPaymentByContract(pagamentos);
-  const contratos = rawCobrancas
-    .map((row) => cleanContrato(row, latestPaymentByContract.get(normalizeId(row.ID_Contrato))))
-    .filter((contrato): contrato is ContratoAnalitico => Boolean(contrato));
+  const sourceData = await getSourceData();
+  const { contratos, pagamentos } = applyAnalyticsFilters(sourceData.contratos, sourceData.pagamentos, activeFilters);
 
   const payload = {
     ...buildAnalytics(contratos, pagamentos),
     validacaoDados: {
-      totalRegistrosCsv: rawCobrancas.length,
-      totalRegistrosXlsx: rawPagamentos.length,
-      primeirosRegistrosCsv: rawCobrancas.slice(0, 20).map(normalizePreviewRecord),
-      primeirosRegistrosXlsx: rawPagamentos.slice(0, 20).map(normalizePreviewRecord)
+      totalRegistrosCsv: sourceData.rawCobrancas.length,
+      totalRegistrosXlsx: sourceData.rawPagamentos.length,
+      primeirosRegistrosCsv: sourceData.rawCobrancas.slice(0, 20).map(normalizePreviewRecord),
+      primeirosRegistrosXlsx: sourceData.rawPagamentos.slice(0, 20).map(normalizePreviewRecord)
     }
   };
   cache = { key, payload };
@@ -133,36 +148,31 @@ export async function getAnalytics() {
   return payload;
 }
 
-export async function getContratoAnalitico(idContrato: string) {
-  await getDataFilesKey();
-
+export async function getContratoAnalitico(idContrato: string, filters: AnalyticsFilters = {}) {
+  const activeFilters = normalizeFilters(filters);
   const normalizedId = normalizeId(idContrato);
-  const pagamentos = readPagamentos()
-    .filter((row) => normalizeId(row.ID_Contrato) === normalizedId)
-    .map(cleanPagamento)
-    .filter((pagamento): pagamento is PagamentoAnalitico => Boolean(pagamento));
-  const latestPaymentByContract = getLatestPaymentByContract(pagamentos);
-  const rawCobrancas = await readCobrancas();
-  const rawContrato = rawCobrancas.find((row) => normalizeId(row.ID_Contrato) === normalizedId);
+  const sourceData = await getSourceData();
+  const { contratos } = applyAnalyticsFilters(sourceData.contratos, sourceData.pagamentos, activeFilters);
 
-  if (!rawContrato) {
-    return null;
-  }
-
-  return cleanContrato(rawContrato, latestPaymentByContract.get(normalizedId));
+  return contratos.find((contrato) => contrato.idContrato === normalizedId) ?? null;
 }
 
-export async function getHistoricoFinanceiro(idContrato: string) {
-  await getDataFilesKey();
-
+export async function getHistoricoFinanceiro(idContrato: string, filters: AnalyticsFilters = {}) {
+  const activeFilters = normalizeFilters(filters);
   const normalizedId = normalizeId(idContrato);
-  const pagamentos = readPagamentos()
-    .filter((row) => normalizeId(row.ID_Contrato) === normalizedId)
-    .map(cleanPagamento)
-    .filter((pagamento): pagamento is PagamentoAnalitico => Boolean(pagamento))
+  const sourceData = await getSourceData();
+  const { pagamentos } = applyAnalyticsFilters(sourceData.contratos, sourceData.pagamentos, activeFilters);
+  const contrato = await getContratoAnalitico(normalizedId, activeFilters);
+
+  if (!contrato) {
+    return [];
+  }
+
+  const historico = pagamentos
+    .filter((pagamento) => pagamento.idContrato === normalizedId)
     .sort((a, b) => a.parcela - b.parcela || compareNullableDates(a.vencimento, b.vencimento));
 
-  return pagamentos.map((item) => ({
+  return historico.map((item) => ({
     parcela: item.parcela,
     vencimento: item.vencimento,
     pagamento: item.pagamento,
@@ -174,7 +184,29 @@ export async function getHistoricoFinanceiro(idContrato: string) {
   }));
 }
 
-async function getAnalyticsKey() {
+export async function getFilterOptions() {
+  const sourceData = await getSourceData();
+  const dates = [
+    ...sourceData.contratos.map((item) => item.dataEnvioAssessoria),
+    ...sourceData.pagamentos.map((item) => item.pagamento ?? item.vencimento)
+  ].filter((value): value is string => Boolean(value));
+
+  return {
+    regioes: uniqueSorted(sourceData.contratos.map((item) => item.regiao)),
+    status: uniqueSorted(sourceData.contratos.map((item) => item.statusCobranca)),
+    niveisRisco: uniqueSorted(sourceData.contratos.map((item) => item.nivelRisco)),
+    formasPagamento: uniqueSorted(sourceData.pagamentos.map((item) => item.formaPagamento)),
+    assessorias: uniqueSorted(sourceData.contratos.map((item) => item.assessoria)),
+    menorData: dates.sort()[0] ?? null,
+    maiorData: dates.sort().at(-1) ?? null
+  };
+}
+
+async function getAnalyticsKey(filters: AnalyticsFilters) {
+  if (hasActiveFilters(filters)) {
+    return `filtered:${await getDataFilesKey()}:${JSON.stringify(filters)}`;
+  }
+
   const generatedKey = await getGeneratedAnalyticsKey();
 
   if (generatedKey) {
@@ -223,6 +255,138 @@ async function readGeneratedAnalytics(): Promise<AnalyticsPayload | null> {
 
 async function readJson<T>(filePath: string) {
   return JSON.parse(await readFile(filePath, "utf8")) as T;
+}
+
+async function getSourceData() {
+  const key = await getDataFilesKey();
+
+  if (sourceCache?.key === key) {
+    return sourceCache;
+  }
+
+  const rawCobrancas = await readCobrancas();
+  const rawPagamentos = readPagamentos();
+  const pagamentos = rawPagamentos.map(cleanPagamento).filter((pagamento): pagamento is PagamentoAnalitico => Boolean(pagamento));
+  const latestPaymentByContract = getLatestPaymentByContract(pagamentos);
+  const contratos = rawCobrancas
+    .map((row) => cleanContrato(row, latestPaymentByContract.get(normalizeId(row.ID_Contrato))))
+    .filter((contrato): contrato is ContratoAnalitico => Boolean(contrato));
+
+  sourceCache = {
+    key,
+    contratos,
+    pagamentos,
+    rawCobrancas,
+    rawPagamentos
+  };
+
+  return sourceCache;
+}
+
+function applyAnalyticsFilters(contratos: ContratoAnalitico[], pagamentos: PagamentoAnalitico[], filters: AnalyticsFilters) {
+  const filteredContratos = contratos.filter((contrato) => contractMatchesFilters(contrato, filters));
+  const filteredIds = new Set(filteredContratos.map((contrato) => contrato.idContrato));
+  const filteredPagamentos = pagamentos.filter((pagamento) => paymentMatchesFilters(pagamento, filteredIds, filters));
+
+  return {
+    contratos: filteredContratos,
+    pagamentos: filteredPagamentos
+  };
+}
+
+function contractMatchesFilters(contrato: ContratoAnalitico, filters: AnalyticsFilters) {
+  if (filters.regiao && contrato.regiao !== filters.regiao) {
+    return false;
+  }
+
+  if (filters.status && contrato.statusCobranca !== filters.status) {
+    return false;
+  }
+
+  if (filters.risco && contrato.nivelRisco !== filters.risco) {
+    return false;
+  }
+
+  if (filters.formaPagamento && contrato.formaPagamento !== filters.formaPagamento) {
+    return false;
+  }
+
+  if (filters.assessoria && contrato.assessoria !== filters.assessoria) {
+    return false;
+  }
+
+  if (!dateMatchesFilters(contrato.dataEnvioAssessoria, filters)) {
+    return false;
+  }
+
+  return true;
+}
+
+function paymentMatchesFilters(pagamento: PagamentoAnalitico, filteredIds: Set<string>, filters: AnalyticsFilters) {
+  if (!filteredIds.has(pagamento.idContrato)) {
+    return false;
+  }
+
+  if (filters.formaPagamento && pagamento.formaPagamento !== filters.formaPagamento) {
+    return false;
+  }
+
+  return dateMatchesFilters(pagamento.pagamento ?? pagamento.vencimento, filters);
+}
+
+function dateMatchesFilters(date: string | null, filters: AnalyticsFilters) {
+  if (!filters.dataInicio && !filters.dataFim) {
+    return true;
+  }
+
+  if (!date) {
+    return false;
+  }
+
+  if (filters.dataInicio && date < filters.dataInicio) {
+    return false;
+  }
+
+  if (filters.dataFim && date > filters.dataFim) {
+    return false;
+  }
+
+  return true;
+}
+
+function normalizeFilters(filters: AnalyticsFilters): AnalyticsFilters {
+  return {
+    regiao: normalizeFilterValue(filters.regiao),
+    dataInicio: normalizeDateFilter(filters.dataInicio),
+    dataFim: normalizeDateFilter(filters.dataFim),
+    status: normalizeFilterValue(filters.status),
+    risco: normalizeFilterValue(filters.risco),
+    formaPagamento: normalizeFilterValue(filters.formaPagamento),
+    assessoria: normalizeFilterValue(filters.assessoria)
+  };
+}
+
+function normalizeFilterValue(value: string | undefined) {
+  const text = normalizeText(value, "");
+
+  if (!text || ["todos", "todas"].includes(removeDiacritics(text).toLowerCase())) {
+    return undefined;
+  }
+
+  return text;
+}
+
+function normalizeDateFilter(value: string | undefined) {
+  const date = toIsoDate(value);
+  return date ?? undefined;
+}
+
+function hasActiveFilters(filters: AnalyticsFilters) {
+  return Object.values(filters).some(Boolean);
+}
+
+function uniqueSorted(values: string[]) {
+  return [...new Set(values.filter(Boolean))].sort((a, b) => a.localeCompare(b, "pt-BR"));
 }
 
 async function getDataFilesKey() {
@@ -278,7 +442,7 @@ function cleanContrato(row: RawCobranca, latestPayment?: PagamentoAnalitico): Co
     return null;
   }
 
-  const diasAtraso = Math.max(0, Math.round(parseNumber(row.Dias_Em_Atraso_Inicial)));
+  const diasAtraso = Math.min(3650, Math.max(0, Math.round(parseNumber(row.Dias_Em_Atraso_Inicial))));
   const valorInadimplente = parseMoney(row.Valor_Inadimplente_Inicial);
   const statusCobranca = normalizeStatus(row.Status_Cobranca);
   const scoreRisco = Math.max(0, Math.min(100, parseNumber(row.Score_Interno_Risco)));
@@ -340,8 +504,6 @@ function buildAnalytics(contratos: ContratoAnalitico[], pagamentos: PagamentoAna
   const clientesPrioritarios = buildClientesPrioritarios(contratos);
   const alertas = buildAlertas(clientesPrioritarios);
   const assessorias = buildAssessorias(contratos);
-  const contratosPorId = Object.fromEntries(contratos.map((contrato) => [contrato.idContrato, contrato]));
-  const historicosFinanceiros = buildHistoricos(pagamentos);
   const tendenciaTemporal = buildTendenciaTemporal(evolucaoPagamentos);
   const patterns = buildPatterns({
     contratos,
@@ -376,8 +538,6 @@ function buildAnalytics(contratos: ContratoAnalitico[], pagamentos: PagamentoAna
 
   return {
     kpis,
-    contratos,
-    pagamentos,
     cobrancaStatus,
     distribuicaoRisco,
     formasPagamento,
@@ -386,8 +546,6 @@ function buildAnalytics(contratos: ContratoAnalitico[], pagamentos: PagamentoAna
     assessorias,
     clientesPrioritarios,
     alertas,
-    contratosPorId,
-    historicosFinanceiros,
     pagamentosResumo: {
       totalRegistrados: pagamentos.length,
       maiorNumeroParcela: maxParcela,
@@ -469,7 +627,7 @@ function buildClientesPrioritarios(contratos: ContratoAnalitico[]) {
         b.valorInadimplente - a.valorInadimplente ||
         b.scoreRisco - a.scoreRisco
     )
-    .slice(0, 20);
+    .slice(0, 50);
 }
 
 function buildAlertas(clientesPrioritarios: ContratoAnalitico[]) {

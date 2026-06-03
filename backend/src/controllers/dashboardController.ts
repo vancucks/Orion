@@ -1,14 +1,21 @@
 import type { Request, Response } from "express";
-import { DataFileNotFoundError, getAnalytics, getContratoAnalitico, getHistoricoFinanceiro } from "../services/analyticsService.js";
+import {
+  type AnalyticsFilters,
+  DataFileNotFoundError,
+  getAnalytics,
+  getContratoAnalitico,
+  getFilterOptions,
+  getHistoricoFinanceiro
+} from "../services/analyticsService.js";
 
 type Analytics = Awaited<ReturnType<typeof getAnalytics>>;
 
-export const getKpis = async (_req: Request, res: Response) => {
-  await sendAnalytics(res, (analytics) => analytics.kpis);
+export const getKpis = async (req: Request, res: Response) => {
+  await sendAnalytics(req, res, (analytics) => analytics.kpis);
 };
 
-export const getDashboardExecutivo = async (_req: Request, res: Response) => {
-  await sendAnalytics(res, (analytics) => ({
+export const getDashboardExecutivo = async (req: Request, res: Response) => {
+  await sendAnalytics(req, res, (analytics) => ({
     kpis: analytics.kpis,
     regioes: analytics.regioes,
     statusCobranca: analytics.cobrancaStatus,
@@ -17,8 +24,8 @@ export const getDashboardExecutivo = async (_req: Request, res: Response) => {
   }));
 };
 
-export const getDashboardRisco = async (_req: Request, res: Response) => {
-  await sendAnalytics(res, (analytics) => ({
+export const getDashboardRisco = async (req: Request, res: Response) => {
+  await sendAnalytics(req, res, (analytics) => ({
     scoreMedioRisco: analytics.kpis.scoreMedioRisco,
     contratosAjuizados: getStatusCount(analytics, "Ajuizado"),
     contratosComAcordo: getStatusCount(analytics, "Acordo Firmado"),
@@ -34,8 +41,8 @@ export const getDashboardRisco = async (_req: Request, res: Response) => {
   }));
 };
 
-export const getDashboardPagamentos = async (_req: Request, res: Response) => {
-  await sendAnalytics(res, (analytics) => ({
+export const getDashboardPagamentos = async (req: Request, res: Response) => {
+  await sendAnalytics(req, res, (analytics) => ({
     pagamentosRegistrados: analytics.pagamentosResumo.totalRegistrados,
     formaMaisUtilizada: analytics.patterns.formaPagamentoPredominante,
     contratosEmAcordo: getStatusCount(analytics, "Acordo Firmado"),
@@ -47,8 +54,8 @@ export const getDashboardPagamentos = async (_req: Request, res: Response) => {
   }));
 };
 
-export const getDashboardRegional = async (_req: Request, res: Response) => {
-  await sendAnalytics(res, (analytics) => {
+export const getDashboardRegional = async (req: Request, res: Response) => {
+  await sendAnalytics(req, res, (analytics) => {
     const regiaoMaisContratos = [...analytics.regioes].sort((a, b) => b.contratos - a.contratos)[0];
     const regiaoMaiorValor = [...analytics.regioes].sort((a, b) => b.valorInadimplente - a.valorInadimplente)[0];
 
@@ -63,8 +70,8 @@ export const getDashboardRegional = async (_req: Request, res: Response) => {
   });
 };
 
-export const getDashboardContratos = async (_req: Request, res: Response) => {
-  await sendAnalytics(res, (analytics) => ({
+export const getDashboardContratos = async (req: Request, res: Response) => {
+  await sendAnalytics(req, res, (analytics) => ({
     statusCobranca: analytics.cobrancaStatus,
     topAssessoriasContratos: analytics.assessorias,
     topAssessoriasEmAberto: [...analytics.assessorias].sort((a, b) => b.emAberto - a.emAberto),
@@ -72,17 +79,17 @@ export const getDashboardContratos = async (_req: Request, res: Response) => {
   }));
 };
 
-export const getClientesPrioritarios = async (_req: Request, res: Response) => {
-  await sendAnalytics(res, (analytics) => analytics.clientesPrioritarios);
+export const getClientesPrioritarios = async (req: Request, res: Response) => {
+  await sendAnalytics(req, res, (analytics) => analytics.clientesPrioritarios);
 };
 
-export const getAlertas = async (_req: Request, res: Response) => {
-  await sendAnalytics(res, (analytics) => analytics.alertas);
+export const getAlertas = async (req: Request, res: Response) => {
+  await sendAnalytics(req, res, (analytics) => analytics.alertas);
 };
 
 export const getContrato = async (req: Request, res: Response) => {
   try {
-    const contrato = await getContratoAnalitico(req.params.id);
+    const contrato = await getContratoAnalitico(req.params.id, getFiltersFromRequest(req));
 
     if (!contrato) {
       res.status(404).json({ message: "Contrato nao encontrado" });
@@ -97,12 +104,7 @@ export const getContrato = async (req: Request, res: Response) => {
 
 export const getHistoricoContrato = async (req: Request, res: Response) => {
   try {
-    const historico = await getHistoricoFinanceiro(req.params.id);
-
-    if (historico.length === 0) {
-      res.status(404).json({ message: "Historico financeiro nao encontrado" });
-      return;
-    }
+    const historico = await getHistoricoFinanceiro(req.params.id, getFiltersFromRequest(req));
 
     res.json(historico);
   } catch (error) {
@@ -110,24 +112,32 @@ export const getHistoricoContrato = async (req: Request, res: Response) => {
   }
 };
 
-export const getInsights = async (_req: Request, res: Response) => {
-  await sendAnalytics(res, (analytics) => analytics.insights);
+export const getInsights = async (req: Request, res: Response) => {
+  await sendAnalytics(req, res, (analytics) => analytics.insights);
 };
 
-export const getValidacaoDados = async (_req: Request, res: Response) => {
-  await sendAnalytics(res, (analytics) => ({
+export const getValidacaoDados = async (req: Request, res: Response) => {
+  await sendAnalytics(req, res, (analytics) => ({
     ...analytics.validacaoDados,
     kpis: analytics.kpis
   }));
 };
 
-export const getRelatorios = async (_req: Request, res: Response) => {
-  await sendAnalytics(res, (analytics) => analytics.relatorioGerencial);
+export const getRelatorios = async (req: Request, res: Response) => {
+  await sendAnalytics(req, res, (analytics) => analytics.relatorioGerencial);
 };
 
-async function sendAnalytics<T>(res: Response, select: (analytics: Analytics) => T) {
+export const getFiltrosOpcoes = async (_req: Request, res: Response) => {
   try {
-    const analytics = await getAnalytics();
+    res.json(await getFilterOptions());
+  } catch (error) {
+    handleAnalyticsError(error, res);
+  }
+};
+
+async function sendAnalytics<T>(req: Request, res: Response, select: (analytics: Analytics) => T) {
+  try {
+    const analytics = await getAnalytics(getFiltersFromRequest(req));
     res.json(select(analytics));
   } catch (error) {
     handleAnalyticsError(error, res);
@@ -152,4 +162,26 @@ function handleAnalyticsError(error: unknown, res: Response) {
 
 function getStatusCount(analytics: Analytics, status: string) {
   return analytics.cobrancaStatus.find((item) => item.status === status)?.quantidade ?? 0;
+}
+
+function getFiltersFromRequest(req: Request): AnalyticsFilters {
+  return {
+    regiao: getQueryParam(req, "regiao"),
+    dataInicio: getQueryParam(req, "dataInicio"),
+    dataFim: getQueryParam(req, "dataFim"),
+    status: getQueryParam(req, "status"),
+    risco: getQueryParam(req, "risco"),
+    formaPagamento: getQueryParam(req, "formaPagamento"),
+    assessoria: getQueryParam(req, "assessoria")
+  };
+}
+
+function getQueryParam(req: Request, key: keyof AnalyticsFilters) {
+  const value = req.query[key];
+
+  if (Array.isArray(value)) {
+    return String(value[0] ?? "");
+  }
+
+  return value ? String(value) : undefined;
 }

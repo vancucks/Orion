@@ -1,9 +1,11 @@
 import { Download, LineChart, ShieldAlert, Target, Wallet } from "lucide-react";
+import { EmptyState } from "../components/EmptyState";
 import { ErrorState } from "../components/ErrorState";
 import { FilterBar } from "../components/FilterBar";
 import { KpiCard } from "../components/KpiCard";
 import { LoadingState } from "../components/LoadingState";
 import { currency, number } from "../components/Formatters";
+import { useFilteredPath } from "../contexts/FilterContext";
 import { useApi } from "../services/useApi";
 
 type RelatorioData = {
@@ -14,14 +16,24 @@ type RelatorioData = {
 const icons = [Wallet, LineChart, Target, ShieldAlert];
 
 export function RelatorioGerencial() {
-  const { data, loading, error } = useApi<RelatorioData>("/api/relatorios");
+  const path = useFilteredPath("/api/relatorios");
+  const { data, loading, error } = useApi<RelatorioData>(path);
 
   if (loading) return <LoadingState />;
   if (error || !data) return <ErrorState message={error ?? "Dados indisponíveis."} />;
 
+  if (data.indicadores.every((item) => item.valor === 0)) {
+    return (
+      <div className="space-y-6">
+        <FilterBar filters={["regioes", "periodos", "statusCobranca", "niveisRisco", "formasPagamento", "assessorias"]} />
+        <EmptyState />
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
-      <FilterBar filters={["regioes", "periodos", "perfis"]} />
+      <FilterBar filters={["regioes", "periodos", "statusCobranca", "niveisRisco", "formasPagamento", "assessorias"]} />
 
       <section className="flex flex-col justify-between gap-4 rounded-lg border border-orion-border bg-white p-5 shadow-soft sm:flex-row sm:items-center">
         <div>

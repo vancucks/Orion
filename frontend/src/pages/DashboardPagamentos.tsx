@@ -1,12 +1,14 @@
 import { Area, AreaChart, Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { BadgeDollarSign, Banknote, CalendarDays, FileCheck } from "lucide-react";
 import { ChartCard } from "../components/ChartCard";
+import { EmptyState } from "../components/EmptyState";
 import { ErrorState } from "../components/ErrorState";
 import { FilterBar } from "../components/FilterBar";
 import { KpiCard } from "../components/KpiCard";
 import { LoadingState } from "../components/LoadingState";
 import { currency, number } from "../components/Formatters";
 import { PaymentMethod } from "../types";
+import { useFilteredPath } from "../contexts/FilterContext";
 import { useApi } from "../services/useApi";
 
 type PagamentosData = {
@@ -20,14 +22,24 @@ type PagamentosData = {
 };
 
 export function DashboardPagamentos() {
-  const { data, loading, error } = useApi<PagamentosData>("/api/dashboard/pagamentos");
+  const path = useFilteredPath("/api/dashboard/pagamentos");
+  const { data, loading, error } = useApi<PagamentosData>(path);
 
   if (loading) return <LoadingState />;
   if (error || !data) return <ErrorState message={error ?? "Dados indisponíveis."} />;
 
+  if (data?.pagamentosRegistrados === 0) {
+    return (
+      <div className="space-y-6">
+        <FilterBar filters={["regioes", "periodos", "statusCobranca", "niveisRisco", "formasPagamento", "assessorias"]} />
+        <EmptyState />
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
-      <FilterBar filters={["periodos", "formasPagamento", "statusCobranca", "assessorias"]} />
+      <FilterBar filters={["regioes", "periodos", "statusCobranca", "niveisRisco", "formasPagamento", "assessorias"]} />
 
       <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <KpiCard title="Pagamentos Registrados" value={number.format(data.pagamentosRegistrados)} detail="Base simulada" icon={<BadgeDollarSign size={20} />} tone="green" />

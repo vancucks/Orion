@@ -8,6 +8,7 @@ import {
   getDashboardPagamentos,
   getDashboardRegional,
   getDashboardRisco,
+  getFiltrosOpcoes,
   getHistoricoContrato,
   getInsights,
   getKpis,
@@ -18,6 +19,7 @@ import {
 const router = Router();
 
 router.get("/kpis", getKpis);
+router.get("/filtros/opcoes", getFiltrosOpcoes);
 router.get("/dashboard/executivo", getDashboardExecutivo);
 router.get("/dashboard/risco", getDashboardRisco);
 router.get("/dashboard/pagamentos", getDashboardPagamentos);

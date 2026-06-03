@@ -2,6 +2,7 @@ import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxi
 import { AlertCircle, FileCheck, Scale, XCircle } from "lucide-react";
 import { ChartCard } from "../components/ChartCard";
 import { DataTable } from "../components/DataTable";
+import { EmptyState } from "../components/EmptyState";
 import { ErrorState } from "../components/ErrorState";
 import { FilterBar } from "../components/FilterBar";
 import { KpiCard } from "../components/KpiCard";
@@ -9,6 +10,7 @@ import { LoadingState } from "../components/LoadingState";
 import { RiskBadge } from "../components/RiskBadge";
 import { currency, number } from "../components/Formatters";
 import { ClientePrioritario, StatusData } from "../types";
+import { useFilteredPath } from "../contexts/FilterContext";
 import { useApi } from "../services/useApi";
 
 type Assessoria = {
@@ -25,22 +27,32 @@ type ContratosData = {
 };
 
 export function DashboardContratos() {
-  const { data, loading, error } = useApi<ContratosData>("/api/dashboard/contratos");
+  const path = useFilteredPath("/api/dashboard/contratos");
+  const { data, loading, error } = useApi<ContratosData>(path);
 
   if (loading) return <LoadingState />;
   if (error || !data) return <ErrorState message={error ?? "Dados indisponíveis."} />;
+
+  if (data.statusCobranca.length === 0 && data.contratosPrioritarios.length === 0) {
+    return (
+      <div className="space-y-6">
+        <FilterBar filters={["regioes", "periodos", "statusCobranca", "niveisRisco", "formasPagamento", "assessorias"]} />
+        <EmptyState />
+      </div>
+    );
+  }
 
   const status = Object.fromEntries(data.statusCobranca.map((item) => [item.status, item.quantidade]));
 
   return (
     <div className="space-y-6">
-      <FilterBar filters={["regioes", "periodos", "statusCobranca", "niveisRisco", "assessorias"]} />
+      <FilterBar filters={["regioes", "periodos", "statusCobranca", "niveisRisco", "formasPagamento", "assessorias"]} />
 
       <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        <KpiCard title="Em Aberto" value={number.format(status["Em Aberto"])} detail="Contratos sem resolução" icon={<AlertCircle size={20} />} tone="orange" />
-        <KpiCard title="Acordo Firmado" value={number.format(status["Acordo Firmado"])} detail="Negociações formalizadas" icon={<FileCheck size={20} />} tone="green" />
-        <KpiCard title="Insucesso" value={number.format(status["Insucesso"])} detail="Cobranças sem êxito" icon={<XCircle size={20} />} tone="red" />
-        <KpiCard title="Ajuizado" value={number.format(status["Ajuizado"])} detail="Contratos em via jurídica" icon={<Scale size={20} />} tone="red" />
+        <KpiCard title="Em Aberto" value={number.format(status["Em Aberto"] ?? 0)} detail="Contratos sem resolução" icon={<AlertCircle size={20} />} tone="orange" />
+        <KpiCard title="Acordo Firmado" value={number.format(status["Acordo Firmado"] ?? 0)} detail="Negociações formalizadas" icon={<FileCheck size={20} />} tone="green" />
+        <KpiCard title="Insucesso" value={number.format(status["Insucesso"] ?? 0)} detail="Cobranças sem êxito" icon={<XCircle size={20} />} tone="red" />
+        <KpiCard title="Ajuizado" value={number.format(status["Ajuizado"] ?? 0)} detail="Contratos em via jurídica" icon={<Scale size={20} />} tone="red" />
       </section>
 
       <section className="grid gap-6 xl:grid-cols-2">
@@ -87,3 +99,4 @@ export function DashboardContratos() {
     </div>
   );
 }
+

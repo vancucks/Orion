@@ -1,21 +1,26 @@
 import { DataTable } from "../components/DataTable";
+import { EmptyState } from "../components/EmptyState";
 import { ErrorState } from "../components/ErrorState";
 import { FilterBar } from "../components/FilterBar";
 import { LoadingState } from "../components/LoadingState";
 import { RiskBadge } from "../components/RiskBadge";
 import { currency, number } from "../components/Formatters";
 import { ClientePrioritario } from "../types";
+import { useFilteredPath } from "../contexts/FilterContext";
 import { useApi } from "../services/useApi";
 
 export function ClientesPrioritarios() {
-  const { data, loading, error } = useApi<ClientePrioritario[]>("/api/clientes-prioritarios");
+  const path = useFilteredPath("/api/clientes-prioritarios");
+  const { data, loading, error } = useApi<ClientePrioritario[]>(path);
 
   if (loading) return <LoadingState />;
   if (error || !data) return <ErrorState message={error ?? "Dados indisponíveis."} />;
 
   return (
     <div className="space-y-6">
-      <FilterBar filters={["regioes", "periodos", "statusCobranca", "niveisRisco", "assessorias"]} />
+      <FilterBar filters={["regioes", "periodos", "statusCobranca", "niveisRisco", "formasPagamento", "assessorias"]} />
+      {data.length === 0 ? <EmptyState /> : null}
+      {data.length > 0 ? (
       <DataTable
         data={data}
         columns={[
@@ -29,6 +34,7 @@ export function ClientesPrioritarios() {
           { header: "Nível de risco", render: (item) => <RiskBadge level={item.nivelRisco} /> }
         ]}
       />
+      ) : null}
     </div>
   );
 }

@@ -13,6 +13,7 @@ export function useApi<T>(path: string) {
 
     setLoading(true);
     setError(null);
+    setData(null);
 
     apiGet<T>(path)
       .then((response) => {

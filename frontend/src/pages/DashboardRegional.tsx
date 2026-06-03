@@ -1,12 +1,14 @@
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { Building, Landmark, MapPinned, TrendingUp } from "lucide-react";
 import { ChartCard } from "../components/ChartCard";
+import { EmptyState } from "../components/EmptyState";
 import { ErrorState } from "../components/ErrorState";
 import { FilterBar } from "../components/FilterBar";
 import { KpiCard } from "../components/KpiCard";
 import { LoadingState } from "../components/LoadingState";
 import { currency, number } from "../components/Formatters";
 import { RegionData } from "../types";
+import { useFilteredPath } from "../contexts/FilterContext";
 import { useApi } from "../services/useApi";
 
 type RegionalData = {
@@ -19,14 +21,24 @@ type RegionalData = {
 };
 
 export function DashboardRegional() {
-  const { data, loading, error } = useApi<RegionalData>("/api/dashboard/regional");
+  const path = useFilteredPath("/api/dashboard/regional");
+  const { data, loading, error } = useApi<RegionalData>(path);
 
   if (loading) return <LoadingState />;
   if (error || !data) return <ErrorState message={error ?? "Dados indisponíveis."} />;
 
+  if (data?.regioes.length === 0) {
+    return (
+      <div className="space-y-6">
+        <FilterBar filters={["regioes", "periodos", "statusCobranca", "niveisRisco", "formasPagamento", "assessorias"]} />
+        <EmptyState />
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
-      <FilterBar filters={["regioes", "periodos", "statusCobranca", "niveisRisco"]} />
+      <FilterBar filters={["regioes", "periodos", "statusCobranca", "niveisRisco", "formasPagamento", "assessorias"]} />
 
       <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <KpiCard title="Região com Mais Contratos" value={data.regiaoMaisContratos} detail="Maior concentração" icon={<MapPinned size={20} />} tone="blue" />
