@@ -1,14 +1,27 @@
-import { FormEvent } from "react";
+import { FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Lock, User } from "lucide-react";
 import { Logo } from "../components/Logo";
 
+const USERNAME = "admin";
+const PASSWORD = "1234";
+
 export function Login() {
   const navigate = useNavigate();
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    navigate("/dashboard/executivo");
+
+    if (username === USERNAME && password === PASSWORD) {
+      setError("");
+      navigate("/dashboard/executivo");
+      return;
+    }
+
+    setError("Usuário ou senha incorretos.");
   }
 
   return (
@@ -35,7 +48,13 @@ export function Login() {
             Login
             <div className="mt-2 flex items-center gap-2 rounded-md border border-orion-border px-3 py-2.5 focus-within:border-orion-blue focus-within:ring-2 focus-within:ring-blue-100">
               <User size={18} className="text-slate-400" />
-              <input className="w-full border-0 outline-none" placeholder="administrador@orion" type="text" />
+              <input
+                className="w-full border-0 outline-none"
+                placeholder="administrador@orion"
+                type="text"
+                value={username}
+                onChange={(event) => setUsername(event.target.value)}
+              />
             </div>
           </label>
 
@@ -43,13 +62,21 @@ export function Login() {
             Senha
             <div className="mt-2 flex items-center gap-2 rounded-md border border-orion-border px-3 py-2.5 focus-within:border-orion-blue focus-within:ring-2 focus-within:ring-blue-100">
               <Lock size={18} className="text-slate-400" />
-              <input className="w-full border-0 outline-none" placeholder="senha simulada" type="password" />
+              <input
+                className="w-full border-0 outline-none"
+                placeholder="senha simulada"
+                type="password"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+              />
             </div>
           </label>
 
           <button className="mt-8 w-full rounded-md bg-orion-blue px-4 py-3 font-semibold text-white transition hover:bg-blue-600" type="submit">
             Entrar
           </button>
+
+          {error ? <p className="mt-3 text-sm font-semibold text-red-600">{error}</p> : null}
 
           <div className="mt-8 rounded-lg border border-orion-border bg-slate-50 p-4 text-sm text-slate-600">
             Perfis visuais disponíveis: Administrador/Gestor e Analista de Cobrança.
